@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Estacionamento dos Gurizes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">Meu Sistema</div>
+            <ul class="menu">
+                <li><a href="{{ url_for('index') }}">Início</a></li>
+                <li><a href="">Cadastrar</a></li>
+                <li><a href="">Listar</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>Desenvolvido por Andrey Rebelatto, Eduardo Will, Erick Anderson</p>
+    </footer>
+</body>
+</html>
