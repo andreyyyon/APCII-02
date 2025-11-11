@@ -1,5 +1,5 @@
 import datetime
-import data 
+import _data 
 import pytz
 
 """
@@ -65,7 +65,7 @@ class Veiculo():
     def buscar_por_placa(placa: str): # Método estático para buscar um veículo pela placa na lista global
         placa = placa.strip().upper()
 
-        for cliente in data.clientes:
+        for cliente in _data.clientes:
             if cliente.placa == placa:
                 return cliente
         return None
