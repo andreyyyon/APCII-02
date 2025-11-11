@@ -1,6 +1,6 @@
 /* static/base.css - Dark Mode Estacionamento */
 
-/* Variáveis de Cores (Boas para futuras customizações) */
+/* Variáveis de Cores (Centralizando o tema Dark Mode) */
 :root {
     --color-background-main: #1e1e1e; /* Fundo principal escuro */
     --color-background-container: #252526; /* Fundo dos cards e containers */
@@ -8,8 +8,11 @@
     --color-text-light: #cccccc; /* Cor para textos secundários */
     --color-primary: #007acc; /* Azul para destaque (links, cabeçalho) */
     --color-success: #28a745; /* Verde para sucesso (botão de registro) */
+    --color-danger: #dc3545; /* Vermelho para cancelar/erro */
     --color-border: #3c3c3c; /* Cor de bordas e linhas */
 }
+
+/* --- ESTILOS GERAIS DA PÁGINA --- */
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -59,27 +62,35 @@ h2 {
     border-bottom: 2px solid var(--color-border);
     padding-bottom: 10px;
 }
-
-/* Estilo do Formulário */
-.form-group {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
+h3 {
+    color: var(--color-text-main);
+    margin-top: 30px;
 }
 
+/* --- ESTILOS DE FORMULÁRIO E BOTÕES --- */
+
+/* Estilo para inputs de texto e áreas comuns */
 input[type="text"] {
     padding: 12px;
     border: 1px solid var(--color-border);
     border-radius: 4px;
     font-size: 16px;
-    flex-grow: 1;
-    max-width: 250px;
-    text-transform: uppercase;
     background-color: #333333; /* Fundo do input mais escuro */
     color: var(--color-text-main);
+    text-transform: uppercase;
 }
 
+/* Estilo para todos os elementos SELECT */
+select {
+    padding: 12px; 
+    background-color: #333; 
+    color: white; 
+    border: 1px solid var(--color-border); 
+    border-radius: 4px; 
+    /* herdando cor de texto de input para ser consistente */
+}
+
+/* Estilo para o botão primário (Submit/Registrar) */
 button {
     padding: 12px 25px;
     background-color: var(--color-success);
@@ -96,6 +107,7 @@ button:hover {
     background-color: #1e8739;
 }
 
+/* Mensagem de Feedback (Sucesso/Aviso) */
 .mensagem-info {
     text-align: center;
     margin-top: 20px;
@@ -106,22 +118,88 @@ button:hover {
     color: var(--color-success);
 }
 
-/* Estilo das Tabelas */
+
+/* --- CLASSES DE LAYOUT E REGISTRO DE VEÍCULO --- */
+
+/* Contêiner genérico para alinhamento em linha (usado na Home) */
+.form-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Estilo para o label e campos do formulário de cadastro */
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--color-text-main);
+    margin-top: 15px;
+}
+
+/* Contêiner de um grupo de campo, com margem inferior */
+.form-field-group {
+    margin-bottom: 20px;
+}
+
+/* Inputs e Selects que devem ocupar 100% do espaço disponível */
+.full-width-input, .full-width-select {
+    width: 100%; 
+}
+
+/* Grupo de campos na mesma linha (Modelo e Cor) */
+.flex-row-group {
+    display: flex;
+    gap: 20px;
+}
+
+.flex-item {
+    flex: 1; /* Faz com que os itens dividam o espaço igualmente */
+}
+
+/* Botão de Cancelar/Voltar (para manter o mesmo visual do botão) */
+.cancel-button {
+    background-color: var(--color-danger); /* Vermelho */
+    color: white;
+    padding: 12px 25px;
+    border-radius: 4px;
+    text-decoration: none; /* Remove sublinhado de link */
+    font-weight: bold;
+    display: inline-block;
+    transition: background-color 0.3s;
+}
+
+.cancel-button:hover {
+    background-color: #c82333;
+}
+
+/* Alinhamento dos botões (Cancelar e Cadastrar) */
+.button-group {
+    justify-content: space-between !important; 
+    margin-top: 30px !important;
+}
+
+
+/* --- ESTILOS DE TABELA (Listar Clientes e Estadias) --- */
+
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    font-size: 0.9em;
 }
 
 th, td {
     border: 1px solid var(--color-border);
-    padding: 10px;
+    padding: 12px;
     text-align: left;
 }
 
 th {
     background-color: var(--color-primary);
     color: white;
+    font-weight: 600;
 }
 
 tr:nth-child(even) {

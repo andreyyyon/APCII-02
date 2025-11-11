@@ -12,6 +12,7 @@
             <a href="{{ url_for('home') }}">Home/Registro</a>
             <a href="{{ url_for('listar_clientes') }}">Listar Clientes</a>
             <a href="{{ url_for('consultar_estadias') }}">Consultar Estadias</a>
+            <a href="{{ url_for('cadastro') }}">Consultar Estadias</a>
         </nav>
     </header>
 
@@ -22,10 +23,10 @@
             <div class="mensagem-info">{{ mensagem }}</div>
         {% endif %}
 
-        <form method="POST" action="{{ url_for('home') }}">
+        <form id="input_placa" method="POST" action="{{ url_for('home') }}">
             <div class="form-group">
                 <input type="text" name="placa" placeholder="ex: ABC1234" required maxlength="7">
-                <button type="submit">Processar Placa</button>
+                <button type="submit">Registrar Entrada/Saída</button>
             </div>
         </form>
     </div>

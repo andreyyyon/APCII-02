@@ -12,6 +12,7 @@
             <a href="{{ url_for('home') }}">Home/Registro</a>
             <a href="{{ url_for('listar_clientes') }}">Listar Clientes</a>
             <a href="{{ url_for('consultar_estadias') }}">Consultar Estadias</a>
+            <a href="{{ url_for('cadastro') }}">Consultar Estadias</a>
         </nav>
     </header>
 
@@ -21,7 +22,7 @@
 
         <form method="POST" action="{{ url_for('consultar_estadias') }}">
             <div class="form-group">
-                <input type="text" name="placa" placeholder="EX: ABC1234" required maxlength="7" value="{{ placa_buscada or '' }}">
+                <input type="text" name="placa" placeholder="ex: ABC1234" required maxlength="7" value="{{ placa_buscada or '' }}">
                 <button type="submit">Buscar Histórico</button>
             </div>
         </form>
