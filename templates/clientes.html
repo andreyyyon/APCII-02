@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Clientes Cadastrados</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Sistema de Estacionamento</h1>
+        <nav>
+            <a href="{{ url_for('home') }}">Home/Registro</a>
+            <a href="{{ url_for('listar_clientes') }}">Listar Clientes</a>
+            <a href="{{ url_for('consultar_estadias') }}">Consultar Estadias</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h2>Lista de Clientes Cadastrados</h2>
+        
+        {% if clientes %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Placa</th>
+                    <th>Modelo</th>
+                    <th>Cor</th>
+                    <th>Tipo</th>
+                    <th>Vaga Atual</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cliente in clientes %}
+                <tr>
+                    <td>{{ cliente.placa }}</td>
+                    <td>{{ cliente.modelo }}</td>
+                    <td>{{ cliente.cor }}</td>
+                    <td>{{ cliente.tipo }}</td>
+                    <td>{{ cliente.vaga }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-message">Nenhum veículo cadastrado encontrado no sistema.</div>
+        {% endif %}
+    </div>
+</body>
+</html>

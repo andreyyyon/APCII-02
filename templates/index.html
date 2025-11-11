@@ -1,8 +1,33 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Estacionamento</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Sistema de Estacionamento</h1>
+        <nav>
+            <a href="{{ url_for('home') }}">Home/Registro</a>
+            <a href="{{ url_for('listar_clientes') }}">Listar Clientes</a>
+            <a href="{{ url_for('consultar_estadias') }}">Consultar Estadias</a>
+        </nav>
+    </header>
 
-{% block content %}
-<section class="welcome">    
-    <h1>Bem-vindo ao Sistema de Estacionamento</h1>
-    <p>É os guri!</p>
-</section>
-{% endblock %}
+    <div class="container">
+        <h2>Registro Rápido de Entrada/Saída</h2>
+        <p>Insira a placa do veículo para registrar a entrada (se estiver fora) ou a saída (se estiver dentro).</p>
+        {% if mensagem %}
+            <div class="mensagem-info">{{ mensagem }}</div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('home') }}">
+            <div class="form-group">
+                <input type="text" name="placa" placeholder="ex: ABC1234" required maxlength="7">
+                <button type="submit">Processar Placa</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

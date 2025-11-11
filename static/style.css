@@ -1,141 +1,140 @@
-/* ==== Estilos gerais ==== */
+/* static/base.css - Dark Mode Estacionamento */
+
+/* Variáveis de Cores (Boas para futuras customizações) */
+:root {
+    --color-background-main: #1e1e1e; /* Fundo principal escuro */
+    --color-background-container: #252526; /* Fundo dos cards e containers */
+    --color-text-main: #f0f0f0; /* Cor principal do texto */
+    --color-text-light: #cccccc; /* Cor para textos secundários */
+    --color-primary: #007acc; /* Azul para destaque (links, cabeçalho) */
+    --color-success: #28a745; /* Verde para sucesso (botão de registro) */
+    --color-border: #3c3c3c; /* Cor de bordas e linhas */
+}
+
 body {
-    margin: 0;
-    font-family: 'Segoe UI', Roboto, sans-serif;
-    background: #f0f2f5;
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-/* ==== Navbar ==== */
-.navbar {
-    background: linear-gradient(90deg, #00d47c, #44d89a, #6fb1fc);
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 40px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-
-.logo {
-    font-size: 1.4em;
-    font-weight: bold;
-}
-
-.menu {
-    list-style: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-background-main);
+    color: var(--color-text-main);
     margin: 0;
     padding: 0;
     display: flex;
-    gap: 25px;
+    flex-direction: column;
+    align-items: center;
 }
 
-.menu a {
+header {
+    width: 100%;
+    background-color: var(--color-primary);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+nav a {
     color: white;
     text-decoration: none;
+    margin: 0 15px;
     font-weight: 500;
-    transition: 0.3s;
+    transition: color 0.3s;
 }
 
-.menu a:hover {
-    text-decoration: underline;
-    color: #ffe;
+nav a:hover {
+    color: #ffc107; /* Amarelo/Dourado no hover */
 }
 
-/* ==== Conteúdo principal ==== */
 .container {
-    flex: 1;
+    background-color: var(--color-background-container);
+    padding: 30px 40px;
+    margin-top: 30px;
+    border-radius: 8px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
     width: 90%;
     max-width: 800px;
-    margin: 40px auto;
-    background: white;
-    border-radius: 10px;
-    padding: 30px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
 
-/* ==== Páginas ==== */
-.welcome {
-    text-align: center;
+/* Títulos */
+h2 {
+    color: var(--color-primary);
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: 10px;
 }
 
-.form-section h2,
-.list-section h2 {
-    margin-bottom: 20px;
-    color: #00d47c;
-}
-
-.form-card {
+/* Estilo do Formulário */
+.form-group {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
 }
 
-.form-card label {
-    font-weight: bold;
+input[type="text"] {
+    padding: 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-size: 16px;
+    flex-grow: 1;
+    max-width: 250px;
+    text-transform: uppercase;
+    background-color: #333333; /* Fundo do input mais escuro */
+    color: var(--color-text-main);
 }
 
-.form-card input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 15px;
-}
-
-.form-card button {
-    background: #00d47c;
+button {
+    padding: 12px 25px;
+    background-color: var(--color-success);
     color: white;
     border: none;
-    padding: 10px 0;
-    border-radius: 6px;
+    border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
-    transition: 0.3s;
+    font-weight: bold;
+    transition: background-color 0.3s;
 }
 
-.form-card button:hover {
-    background: #00d47c;
+button:hover {
+    background-color: #1e8739;
 }
 
-/* ==== Tabela ==== */
-.data-table {
+.mensagem-info {
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 4px;
+    background-color: #1a4d2c; /* Fundo mais escuro para info verde */
+    border: 1px solid var(--color-success);
+    color: var(--color-success);
+}
+
+/* Estilo das Tabelas */
+table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
-.data-table th {
-    background: #00d47c;
-    color: white;
+th, td {
+    border: 1px solid var(--color-border);
     padding: 10px;
     text-align: left;
 }
 
-.data-table td {
-    border-bottom: 1px solid #ddd;
-    padding: 10px;
+th {
+    background-color: var(--color-primary);
+    color: white;
 }
 
-.data-table tr:hover {
-    background: #f2f6ff;
+tr:nth-child(even) {
+    background-color: #2c2c2c; /* Listras da tabela */
+}
+tr:nth-child(odd) {
+    background-color: #252526;
 }
 
-/* ==== Rodapé ==== */
-footer {
-    background: #eaeaea;
+.empty-message {
     text-align: center;
-    padding: 15px;
-    font-size: 14px;
-    color: #555;
-    border-top: 1px solid #ccc;
-}
-
-
-
-input:valid {
-    border: 2px solid #4caf50;
-    background-color: #f6fff7;
+    color: var(--color-text-light);
+    padding: 20px;
+    border: 1px dashed var(--color-border);
+    border-radius: 4px;
 }

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Consultar Estadias</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Sistema de Estacionamento</h1>
+        <nav>
+            <a href="{{ url_for('home') }}">Home/Registro</a>
+            <a href="{{ url_for('listar_clientes') }}">Listar Clientes</a>
+            <a href="{{ url_for('consultar_estadias') }}">Consultar Estadias</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h2>Consultar Histórico de Estadias</h2>
+        <p>Digite a placa do veúclpo para ver todo o histórico de uso do estacionamento.</p>
+
+        <form method="POST" action="{{ url_for('consultar_estadias') }}">
+            <div class="form-group">
+                <input type="text" name="placa" placeholder="EX: ABC1234" required maxlength="7" value="{{ placa_buscada or '' }}">
+                <button type="submit">Buscar Histórico</button>
+            </div>
+        </form>
+
+        {% if placa_buscada and estadias %}
+            <h3>Histórico para a placa: {{ placa_buscada }}</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Vaga</th>
+                        <th>Entrada</th>
+                        <th>Saída</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for estadia in estadias %}
+                    <tr>
+                        <td>{{ estadia.vaga }}</td>
+                        <td>{{ estadia.entrada }}</td>
+                        <td>{{ estadia.saida if estadia.saida else 'EM ABERTO' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% elif placa_buscada and not estadias %}
+            <div class="empty-message">Nenhum histórico de estadia encontrado para a placa {{ placa_buscada }}.</div>
+        {% endif %}
+    </div>
+</body>
+</html>
