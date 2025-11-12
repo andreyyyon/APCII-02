@@ -2,33 +2,44 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Sistema de Estacionamento</title>
+    <title>Entrada/Saída de Veículos</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <header>
         <h1>Sistema de Estacionamento</h1>
         <nav>
-            <a href="{{ url_for('home') }}">Home/Registro</a>
-            <a href="{{ url_for('listar_clientes') }}">Listar Clientes</a>
-            <a href="{{ url_for('consultar_estadias') }}">Consultar Estadias</a>
-            <a href="{{ url_for('cadastro') }}">Consultar Estadias</a>
+            <a href="{{ url_for('home') }}">Entrada/Saída</a>
+            <a href="{{ url_for('listar_clientes') }}">Veículos Cadastrados</a>
+            <a href="{{ url_for('estadias') }}">Consultar Estadias</a>
+            <a href="{{ url_for('cadastro') }}">Cadastrar Veículo</a>
         </nav>
     </header>
 
-    <div class="container">
-        <h2>Registro Rápido de Entrada/Saída</h2>
-        <p>Insira a placa do veículo para registrar a entrada (se estiver fora) ou a saída (se estiver dentro).</p>
+    <div class="container"> 
+        <h2>Registro de Entrada / Saída</h2>
+
         {% if mensagem %}
             <div class="mensagem-info">{{ mensagem }}</div>
         {% endif %}
 
-        <form id="input_placa" method="POST" action="{{ url_for('home') }}">
+        <form action="{{ url_for('home') }}" method="post">
             <div class="form-group">
-                <input type="text" name="placa" placeholder="ex: ABC1234" required maxlength="7">
-                <button type="submit">Registrar Entrada/Saída</button>
+                <label for="placa">Placa do Veículo:</label>
+                <input type="text" 
+                       id="placa" 
+                       name="placa" 
+                       placeholder="Ex: ABC1234" 
+                       required>
+                <button type="submit">Registrar</button>
             </div>
         </form>
+
+        {% if not mensagem %}
+            <p class="empty-message">
+                Insira a placa para registrar a entrada ou saída.
+            </p>
+        {% endif %}
     </div>
 </body>
 </html>

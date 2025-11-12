@@ -9,18 +9,18 @@
     <header>
         <h1>Sistema de Estacionamento</h1>
         <nav>
-            <a href="{{ url_for('home') }}">Home/Registro</a>
-            <a href="{{ url_for('listar_clientes') }}">Listar Clientes</a>
-            <a href="{{ url_for('consultar_estadias') }}">Consultar Estadias</a>
-            <a href="{{ url_for('cadastro') }}">Consultar Estadias</a>
+            <a href="{{ url_for('home') }}">Entrada/Saída</a>
+            <a href="{{ url_for('listar_clientes') }}">Veículos Cadastrados</a>
+            <a href="{{ url_for('estadias') }}">Consultar Estadias</a>
+            <a href="{{ url_for('cadastro') }}">Cadastrar Veículo</a>
         </nav>
     </header>
 
     <div class="container">
         <h2>Consultar Histórico de Estadias</h2>
-        <p>Digite a placa do veúclpo para ver todo o histórico de uso do estacionamento.</p>
+        <p>Digite a placa do veículo para ver todo o histórico de uso do estacionamento.</p>
 
-        <form method="POST" action="{{ url_for('consultar_estadias') }}">
+        <form method="POST" action="{{ url_for('estadias') }}">
             <div class="form-group">
                 <input type="text" name="placa" placeholder="ex: ABC1234" required maxlength="7" value="{{ placa_buscada or '' }}">
                 <button type="submit">Buscar Histórico</button>

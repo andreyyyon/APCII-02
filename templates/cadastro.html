@@ -2,125 +2,22 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Cadastro de Novo Veículo</title>
+    <title>Cadastro de Veículo</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <header>
         <h1>Sistema de Estacionamento</h1>
         <nav>
-            <a href="{{ url_for('home') }}">Home/Registro</a>
-            <a href="{{ url_for('listar_clientes') }}">Listar Clientes</a>
-            <a href="{{ url_for('consultar_estadias') }}">Consultar Estadias</a>
-            <a href="{{ url_for('cadastro') }}">Consultar Estadias</a>
+            <a href="{{ url_for('home') }}">Entrada/Saída</a>
+            <a href="{{ url_for('listar_clientes') }}">Clientes Cadastrados</a>
+            <a href="{{ url_for('estadias') }}">Consultar Estadias</a>
+            <a href="{{ url_for('cadastro') }}">Cadastrar Veículo</a>
         </nav>
     </header>
 
-    <div class="container">
-        <h2>Novo Veículo - Cadastro e Entrada</h2>
-        <form method="POST" action="{{ url_for('cadastro') }}">
-            
-            <div class="form-field-group">
-                <label for="placa" class="form-label">Placa do Veículo (Será a chave de busca):</label>
-                <input type="text" id="placa" name="placa" 
-                       placeholder="EX: ABC1234" required maxlength="7" 
-                       value="{{ placa_inicial or '' }}"
-                       class="full-width-input" readonly>
-            </div>
-
-            <div class="form-field-group">
-                <label for="tipo" class="form-label">1. É um Carro ou uma Moto?</label>
-                <select id="tipo" name="tipo" onchange="toggleVehicleOptions()" required class="full-width-select">
-                    <option value="">-- Selecione o Tipo --</option>
-                    <option value="Carro" {% if placa_inicial %}selected{% endif %}>Carro</option>
-                    <option value="Moto">Moto</option>
-                </select>
-            </div>
-
-            <div id="carro-options" class="form-field-group" style="display: none;">
-                <label for="tamanho" class="form-label">2. Qual o Tamanho do Carro?</label>
-                <select id="tamanho" name="tamanho" class="full-width-select">
-                    <option value="M">Médio (M)</option>
-                    <option value="G">Grande (G)</option>
-                </select>
-            </div>
-            
-            <div id="moto-options" class="form-field-group" style="display: none;">
-                <label for="eletrica" class="form-label">2. A Moto é Elétrica ou de Combustão?</label>
-                <select id="eletrica" name="eletrica" class="full-width-select">
-                    <option value="False">Combustão</option>
-                    <option value="True">Elétrica</option>
-                </select>
-            </div>
-            
-            <div id="common-details" style="display: none;">
-                <h3>Detalhes do Veículo</h3>
-                <div class="flex-row-group">
-                    <div class="flex-item">
-                        <label for="modelo" class="form-label">3. Modelo:</label>
-                        <input type="text" id="modelo" name="modelo" placeholder="Ex: Onix, CB 500" class="full-width-input">
-                    </div>
-                    <div class="flex-item">
-                        <label for="cor" class="form-label">4. Cor:</label>
-                        <input type="text" id="cor" name="cor" placeholder="Ex: Preto, Azul" class="full-width-input">
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group button-group">
-                <a href="{{ url_for('home') }}" class="button cancel-button">Cancelar</a>
-                <button type="submit">Cadastrar e Registrar Entrada</button>
-            </div>
-        </form>
+    <div class="container centered-content">
+        <h2>Cadastro de Veículo</h2>
     </div>
-
-    <script>
-        function toggleVehicleOptions() {
-            var tipo = document.getElementById('tipo').value;
-            var carroOptions = document.getElementById('carro-options');
-            var motoOptions = document.getElementById('moto-options');
-            var commonDetails = document.getElementById('common-details');
-            
-            var tamanho = document.getElementById('tamanho');
-            var eletrica = document.getElementById('eletrica');
-            var modelo = document.getElementById('modelo');
-            var cor = document.getElementById('cor');
-
-            // 1. Esconde tudo e remove o 'required'
-            carroOptions.style.display = 'none';
-            motoOptions.style.display = 'none';
-            commonDetails.style.display = 'none';
-            
-            tamanho.required = false;
-            eletrica.required = false;
-            modelo.required = false;
-            cor.required = false;
-
-            if (tipo === 'Carro') {
-                // 2. Mostra as opções de Carro
-                carroOptions.style.display = 'block';
-                commonDetails.style.display = 'block';
-                
-                // Define o 'required' para campos necessários
-                tamanho.required = true;
-                modelo.required = true;
-                cor.required = true;
-            } else if (tipo === 'Moto') {
-                // 2. Mostra as opções de Moto
-                motoOptions.style.display = 'block';
-                commonDetails.style.display = 'block';
-                
-                // Define o 'required' para campos necessários
-                eletrica.required = true;
-                modelo.required = true;
-                cor.required = true;
-            } else {
-                // Se nenhum tipo for selecionado, esconde tudo e não exige nada
-            }
-        }
-        
-        // Ativa a função ao carregar a página para garantir o estado correto (importante para recarregamentos)
-        document.addEventListener('DOMContentLoaded', toggleVehicleOptions);
-    </script>
 </body>
 </html>
