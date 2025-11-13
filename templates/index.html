@@ -1,8 +1,31 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="welcome">    
-    <h1>Bem-vindo ao Sistema de Estacionamento</h1>
-    <p>É os guri!</p>
+<section class="form-section">
+    <h2>Registro de Entrada / Saída</h2>
+
+    {% if mensagem %}
+        <div class="mensagem-info">{{ mensagem }}</div>
+    {% endif %}
+
+    <form action="{{ url_for('home') }}" method="post" class="form-card">
+        <!-- <div class="form-group"> -->
+            <label for="placa">Placa do Veículo</label>
+            <input type="text" 
+                    id="placa" 
+                    name="placa" 
+                    placeholder="Ex: ABC1234" 
+                    required>
+            <button type="submit">Registrar</button>
+        <!-- </div> -->
+    </form>
+
+    {% if not mensagem %}
+        <p class="empty-message">
+            Insira a placa para registrar a entrada ou saída.
+        </p>
+    {% endif %}
 </section>
+    
 {% endblock %}
+

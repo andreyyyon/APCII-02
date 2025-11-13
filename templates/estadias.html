@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="form-section">
+    <h2>Consultar Histórico de Estadias</h2>
+    <p>Digite a placa do veículo para ver todo o histórico de uso do estacionamento.</p>    
+
+    <form method="POST" class="form-card" action="{{ url_for('estadias') }}">
+        <input type="text" name="placa" placeholder="ex: ABC1234" required maxlength="7" value="{{ placa_buscada or '' }}">
+        <button type="submit">Buscar Histórico</button>
+    </form>
+
+    {% if placa_buscada and estadias %}
+        <h3>Histórico para a placa: {{ placa_buscada }}</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Vaga</th>
+                    <th>Entrada</th>
+                    <th>Saída</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for estadia in estadias %}
+                <tr>
+                    <td>{{ estadia.vaga }}</td>
+                    <td>{{ estadia.entrada }}</td>
+                    <td>{{ estadia.saida if estadia.saida else 'EM ABERTO' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% elif placa_buscada and not estadias %}
+        <div class="empty-message">Nenhum histórico de estadia encontrado para a placa {{ placa_buscada }}.</div>
+    {% endif %}
+
+</section>
+    
+{% endblock %}
+

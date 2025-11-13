@@ -11,7 +11,7 @@ body {
 
 /* ==== Navbar ==== */
 .navbar {
-    background: linear-gradient(90deg, #00d47c, #44d89a, #6fb1fc);
+    background: linear-gradient(90deg, #0052d4, #4364f7, #6fb1fc);
     color: white;
     display: flex;
     justify-content: space-between;
@@ -65,7 +65,7 @@ body {
 .form-section h2,
 .list-section h2 {
     margin-bottom: 20px;
-    color: #00d47c;
+    color: #004aad;
 }
 
 .form-card {
@@ -85,8 +85,15 @@ body {
     font-size: 15px;
 }
 
+.form-card select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
 .form-card button {
-    background: #00d47c;
+    background: #0052d4;
     color: white;
     border: none;
     padding: 10px 0;
@@ -97,7 +104,7 @@ body {
 }
 
 .form-card button:hover {
-    background: #00d47c;
+    background: #003ea1;
 }
 
 /* ==== Tabela ==== */
@@ -108,7 +115,7 @@ body {
 }
 
 .data-table th {
-    background: #00d47c;
+    background: #0052d4;
     color: white;
     padding: 10px;
     text-align: left;
@@ -133,9 +140,45 @@ footer {
     border-top: 1px solid #ccc;
 }
 
-
-
 input:valid {
     border: 2px solid #4caf50;
     background-color: #f6fff7;
+}
+
+
+.hide {
+    display: none !important;
+}
+
+#esp_carro,
+#esp_moto {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+}
+
+/* MENSAGENS DE FEEDBACK */
+.mensagem-info {
+    background-color: #f0f2f5;
+    color: #4a90e2;
+    border: 1px solid #4a90e2;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.empty-message {
+    text-align: center;
+    padding: 40px;
+    color: #999999;
+    font-style: italic;
+}
+
+.form-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: center;
 }
