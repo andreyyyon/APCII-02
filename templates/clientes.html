@@ -1,26 +1,10 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Veículos Cadastrados</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <header>
-        <h1>Sistema de Estacionamento</h1>
-        <nav>
-            <a href="{{ url_for('home') }}">Entrada/Saída</a>
-            <a href="{{ url_for('listar_clientes') }}">Veículos Cadastrados</a>
-            <a href="{{ url_for('estadias') }}">Consultar Estadias</a>
-            <a href="{{ url_for('cadastro') }}">Cadastrar Veículo</a>
-        </nav>
-    </header>
+{% extends "base.html" %}
 
-    <div class="container">
-        <h2>Lista de Clientes Cadastrados</h2>
-        
-        {% if clientes %}
-        <table>
+{% block content %}
+<section class="list-section">
+    <h2>Lista de Clientes Cadastrados</h2>    
+    {% if clientes %}
+        <table class="data-table">
             <thead>
                 <tr>
                     <th>Placa</th>
@@ -32,19 +16,20 @@
             </thead>
             <tbody>
                 {% for cliente in clientes %}
-                <tr>
-                    <td>{{ cliente.placa }}</td>
-                    <td>{{ cliente.modelo }}</td>
-                    <td>{{ cliente.cor }}</td>
-                    <td>{{ cliente.tipo }}</td>
-                    <td>{{ cliente.vaga }}</td>
-                </tr>
+                    <tr>
+                        <td>{{ cliente.placa }}</td>
+                        <td>{{ cliente.modelo }}</td>
+                        <td>{{ cliente.cor }}</td>
+                        <td>{{ cliente.tipo }}</td>
+                        <td>{{ cliente.vaga }}</td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>
-        {% else %}
+    {% else %}
         <div class="empty-message">Nenhum veículo cadastrado encontrado no sistema.</div>
-        {% endif %}
-    </div>
-</body>
-</html>
+    {% endif %}
+</section>
+    
+{% endblock %}
+

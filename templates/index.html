@@ -1,45 +1,31 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Entrada/Saída de Veículos</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <header>
-        <h1>Sistema de Estacionamento</h1>
-        <nav>
-            <a href="{{ url_for('home') }}">Entrada/Saída</a>
-            <a href="{{ url_for('listar_clientes') }}">Veículos Cadastrados</a>
-            <a href="{{ url_for('estadias') }}">Consultar Estadias</a>
-            <a href="{{ url_for('cadastro') }}">Cadastrar Veículo</a>
-        </nav>
-    </header>
+{% extends "base.html" %}
 
-    <div class="container"> 
-        <h2>Registro de Entrada / Saída</h2>
+{% block content %}
+<section class="form-section">
+    <h2>Registro de Entrada / Saída</h2>
 
-        {% if mensagem %}
-            <div class="mensagem-info">{{ mensagem }}</div>
-        {% endif %}
+    {% if mensagem %}
+        <div class="mensagem-info">{{ mensagem }}</div>
+    {% endif %}
 
-        <form action="{{ url_for('home') }}" method="post">
-            <div class="form-group">
-                <label for="placa">Placa do Veículo:</label>
-                <input type="text" 
-                       id="placa" 
-                       name="placa" 
-                       placeholder="Ex: ABC1234" 
-                       required>
-                <button type="submit">Registrar</button>
-            </div>
-        </form>
+    <form action="{{ url_for('home') }}" method="post" class="form-card">
+        <!-- <div class="form-group"> -->
+            <label for="placa">Placa do Veículo</label>
+            <input type="text" 
+                    id="placa" 
+                    name="placa" 
+                    placeholder="Ex: ABC1234" 
+                    required>
+            <button type="submit">Registrar</button>
+        <!-- </div> -->
+    </form>
 
-        {% if not mensagem %}
-            <p class="empty-message">
-                Insira a placa para registrar a entrada ou saída.
-            </p>
-        {% endif %}
-    </div>
-</body>
-</html>
+    {% if not mensagem %}
+        <p class="empty-message">
+            Insira a placa para registrar a entrada ou saída.
+        </p>
+    {% endif %}
+</section>
+    
+{% endblock %}
+

@@ -58,7 +58,15 @@ def listar_clientes():
     Rota de Clientes: Lista os clientes. 
     CORREÇÃO: O nome da função é 'listar_clientes'.
     """
-    clientes = [] # Dados reais viriam do banco de dados
+    clientes = [
+        {
+            "placa": "123",
+            "modelo": "HB20",
+            "cor": "Preto",
+            "tipo": "Carro",
+            "vaga": "XYZ"
+        }
+    ] # Dados reais viriam do banco de dados
     return render_template('clientes.html', clientes=clientes) 
 
 @app.route('/estadias')
@@ -68,6 +76,7 @@ def estadias():
     CORREÇÃO: Assumindo que o template correto é 'estadias.html'
     """
     return render_template('estadias.html') 
+
 
 if __name__ == '__main__':
     app.run(debug=True)

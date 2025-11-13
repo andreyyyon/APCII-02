@@ -1,55 +1,40 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Consultar Estadias</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <header>
-        <h1>Sistema de Estacionamento</h1>
-        <nav>
-            <a href="{{ url_for('home') }}">Entrada/Saída</a>
-            <a href="{{ url_for('listar_clientes') }}">Veículos Cadastrados</a>
-            <a href="{{ url_for('estadias') }}">Consultar Estadias</a>
-            <a href="{{ url_for('cadastro') }}">Cadastrar Veículo</a>
-        </nav>
-    </header>
+{% extends "base.html" %}
 
-    <div class="container">
-        <h2>Consultar Histórico de Estadias</h2>
-        <p>Digite a placa do veículo para ver todo o histórico de uso do estacionamento.</p>
+{% block content %}
+<section class="form-section">
+    <h2>Consultar Histórico de Estadias</h2>
+    <p>Digite a placa do veículo para ver todo o histórico de uso do estacionamento.</p>    
 
-        <form method="POST" action="{{ url_for('estadias') }}">
-            <div class="form-group">
-                <input type="text" name="placa" placeholder="ex: ABC1234" required maxlength="7" value="{{ placa_buscada or '' }}">
-                <button type="submit">Buscar Histórico</button>
-            </div>
-        </form>
+    <form method="POST" class="form-card" action="{{ url_for('estadias') }}">
+        <input type="text" name="placa" placeholder="ex: ABC1234" required maxlength="7" value="{{ placa_buscada or '' }}">
+        <button type="submit">Buscar Histórico</button>
+    </form>
 
-        {% if placa_buscada and estadias %}
-            <h3>Histórico para a placa: {{ placa_buscada }}</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Vaga</th>
-                        <th>Entrada</th>
-                        <th>Saída</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for estadia in estadias %}
-                    <tr>
-                        <td>{{ estadia.vaga }}</td>
-                        <td>{{ estadia.entrada }}</td>
-                        <td>{{ estadia.saida if estadia.saida else 'EM ABERTO' }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% elif placa_buscada and not estadias %}
-            <div class="empty-message">Nenhum histórico de estadia encontrado para a placa {{ placa_buscada }}.</div>
-        {% endif %}
-    </div>
-</body>
-</html>
+    {% if placa_buscada and estadias %}
+        <h3>Histórico para a placa: {{ placa_buscada }}</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Vaga</th>
+                    <th>Entrada</th>
+                    <th>Saída</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for estadia in estadias %}
+                <tr>
+                    <td>{{ estadia.vaga }}</td>
+                    <td>{{ estadia.entrada }}</td>
+                    <td>{{ estadia.saida if estadia.saida else 'EM ABERTO' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% elif placa_buscada and not estadias %}
+        <div class="empty-message">Nenhum histórico de estadia encontrado para a placa {{ placa_buscada }}.</div>
+    {% endif %}
+
+</section>
+    
+{% endblock %}
+

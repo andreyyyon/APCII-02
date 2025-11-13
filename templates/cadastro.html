@@ -1,23 +1,59 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Cadastro de Veículo</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <header>
-        <h1>Sistema de Estacionamento</h1>
-        <nav>
-            <a href="{{ url_for('home') }}">Entrada/Saída</a>
-            <a href="{{ url_for('listar_clientes') }}">Clientes Cadastrados</a>
-            <a href="{{ url_for('estadias') }}">Consultar Estadias</a>
-            <a href="{{ url_for('cadastro') }}">Cadastrar Veículo</a>
-        </nav>
-    </header>
+{% extends "base.html" %}
 
-    <div class="container centered-content">
-        <h2>Cadastro de Veículo</h2>
-    </div>
-</body>
-</html>
+{% block content %}
+<section class="form-section">    
+    <h2>Cadastrar Veículo</h2>
+
+    <form method="POST" class="form-card">
+        <label for="type">Tipo do Veículo</label>
+        <select name="type" id="type" value="carro" required>
+            <option value="carro">Carro</option>
+            <option value="moto">Moto</option>
+        </select>
+
+        <label for="placa">Placa</label>
+        <input type="text" id="placa" name="placa" required>
+        
+        <label for="modelo">Modelo</label>
+        <input type="email" id="modelo" name="modelo" required>
+        
+        <label for="cor">Cor</label>
+        <input type="text" id="cor" name="Cor" required>
+        
+        <div id="esp_carro" class="fade">
+            <label for="">Tamanho</label>
+            <select name="tamanho" id="tamanho" value="medio" required>
+                <option value="medio">Médio</option>
+                <option value="grande">Grande</option>
+            </select>
+        </div>
+
+        <div id="esp_moto" class="fade hide">
+            <label for="tipoMoto">Tipo de motorização</label>
+            <select name="tipoMoto" id="tipoMoto" value="combustao" required>
+                <option value="medio">Combustão</option>
+                <option value="eletrica">Elétrica</option>
+            </select>
+        </div>
+
+        <button type="submit">Salvar</button>
+    </form>
+</section>
+
+<script>
+    const type = document.getElementById("type");
+    const esp_carro = document.getElementById("esp_carro");
+    const esp_moto = document.getElementById("esp_moto");
+
+    type.addEventListener("change", () => {
+        if(type.value === "moto"){
+            esp_carro.classList.add("hide");
+            esp_moto.classList.remove("hide");
+        }else if(type.value === "carro"){
+            esp_moto.classList.add("hide");
+            esp_carro.classList.remove("hide");
+        }
+    })
+</script>
+{% endblock %}
+
