@@ -6,15 +6,16 @@
     String Private - placa      Chave primaria do veículo
     String Private - modelo     Modelo  do veículo
     String Private - cor        Cor do veículo
-    String Private - vaga       Vaga que o veículo está ocupando
+    String Private - tipo       Tipo do veículo
 """
 
 class Veiculo():
-    def __init__(self, placa, modelo, cor, vaga):
+    def __init__(self, placa, modelo, cor, tipo, status):
         self._placa = placa
         self._modelo = modelo
         self._cor = cor
-        self._vaga = vaga
+        self._tipo = tipo
+        self._status = status
 
     @property
     def placa(self):
@@ -22,7 +23,7 @@ class Veiculo():
 
     @placa.setter
     def placa(self, placa):
-            self._placa = placa
+        self._placa = placa
 
     @property
     def modelo(self):
@@ -41,9 +42,17 @@ class Veiculo():
             self._cor = cor
 
     @property
-    def vaga(self):
-        return self._vaga
+    def tipo(self):
+        return self._tipo
 
-    @vaga.setter
-    def vaga(self, vaga):
-            self._vaga = vaga
+    @tipo.setter
+    def tipo(self, tipo):
+            self._tipo = tipo
+    
+    @property
+    def status(self):
+        return self._status
+
+    @status.setter
+    def status(self, status):
+            self._tipo = status

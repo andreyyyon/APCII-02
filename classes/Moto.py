@@ -9,8 +9,8 @@ from Veiculo import Veiculo
 """
 
 class Moto(Veiculo):    
-    def __init__(self, placa, modelo, cor, vaga, eletrica):
-        super().__init__(placa, modelo, cor, vaga)
+    def __init__(self, placa, modelo, cor, status, eletrica):
+        super().__init__(placa, modelo, cor, "M", status)
         
         self._eletrica = eletrica
 

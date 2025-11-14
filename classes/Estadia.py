@@ -19,12 +19,12 @@ class Estadia():
         self._saida = saida
     
     # Método para registrar a entrada
-    def registrar_entrada(self):
+    def register_entry(self):
         agora = datetime.datetime.now()
         self._entrada = agora.strftime('%d/%m/%Y %H:%M:%S')
 
     # Método para registrar a saída
-    def registrar_saida(self):
+    def register_out(self):
         agora = datetime.datetime.now()
         self._saida = agora.strftime('%d/%m/%Y %H:%M:%S')
 

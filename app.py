@@ -44,7 +44,6 @@ iniciar_banco()
         funções:
         validatePlate - Valida existência da placa
         createVehicle - Cria veículo 
-        validateVehicleData - Valida consitencia dos dados preenchidos, chamado pelo createVehicle;
 
     - Tela de Consulta de estadias, contem um input que deverá ser inserido a PLACA do veículo, e caso renderizado com o objeto contendo estadias, 
       deve listar as estadias do veículo em forma da table
@@ -54,7 +53,7 @@ iniciar_banco()
 
         funções:
         validatePlate - Valida existência da placa
-        searchStays - Busca todas as estadias do veículo e retorna o array de objetos (estadias)
+        getStays - Busca todas as estadias do veículo e retorna o array de objetos (estadias)
 
     - Tela de Consulta de Veiculos, contém uma table com todos os clientes, com dois botões, de edição e exclusão do veículo
         * Exibe em tela todos os clientes cadastrados;
@@ -62,7 +61,7 @@ iniciar_banco()
         * Opção de edição abre um modal de atualização com os dados pré preenchidos;
 
         funções:
-        searchVehicles - Busca todos os veículos e retorna um array de objetos (veículos)
+        getVehicles - Busca todos os veículos e retorna um array de objetos (veículos)
         deleteVehicle - Deleta veículo da tabela e recarrega o component
         updateVehicle - Chamado após o submit do modal, faz a validação da consistencia dos dados e recarrega o component
 """

@@ -9,8 +9,8 @@ from Veiculo import Veiculo
 """
 
 class Carro(Veiculo):    
-    def __init__(self, placa, modelo, cor, vaga, tamanho):
-        super().__init__(placa, modelo, cor, vaga)
+    def __init__(self, placa, modelo, cor, status, tamanho):
+        super().__init__(placa, modelo, cor, "C", status)
         self._tamanho = tamanho
 
     @property
