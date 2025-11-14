@@ -1,6 +1,4 @@
 import datetime
-import _data 
-import pytz
 
 """
     {Python} class Veiculo
@@ -51,24 +49,6 @@ class Veiculo():
     @vaga.setter
     def vaga(self, vaga):
             self._vaga = vaga
-
-    """
-        @staticmethod é um decorator em Python que transforma um método em uma 
-        função utilitária que pertence à classe, mas que não tem acesso nem à 
-        instância da classe (o 'self').
-
-        Ou seja, ela funciona de maneira indepente, util para buscas do seu 
-        escopo global.
-    """
-
-    @staticmethod
-    def buscar_por_placa(placa: str): # Método estático para buscar um veículo pela placa na lista global
-        placa = placa.strip().upper()
-
-        for cliente in _data.clientes:
-            if cliente.placa == placa:
-                return cliente
-        return None
 
 """
     {Python} class Carro
