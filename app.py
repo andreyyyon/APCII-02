@@ -16,9 +16,9 @@ iniciar_banco()
     controller.py - definir modulo de funções utilizadas
 
     Rotas:
-    /         - Tela inicial
+    /index    - Tela inicial
     /cadastro - Tela de cadastro
-    /veiculos - Tela de consulta de veiculos
+    /clientes - Tela de consulta de veiculos
     /estadias - Tela de consulta de estadias
 
     - Tela inicial, contem um input que deverá ser inserido a PLACA do veículo:
@@ -65,6 +65,51 @@ iniciar_banco()
         deleteVehicle - Deleta veículo da tabela e recarrega o component
         updateVehicle - Chamado após o submit do modal, faz a validação da consistencia dos dados e recarrega o component
 """
+
+
+# Rotas Principais
+
+# Rota index, tela de registro de entrada/saída
+@app.route("/", methods=["GET", "POST"])
+@app.route("/index", methods=["GET", "POST"])
+def index():
+    if request.method == "POST":
+        placa = request.form.get('placa')
+
+        # Verificar se há o registro da placa
+        if not controller.validatePlate(placa):
+            return redirect(url_for('cadastro', placa=placa))
+        
+        # Se estiver estacionado, registrar saída
+        if controller.validateStatus:
+            return controller.registerOut(placa)
+        
+        # Se estiver já cadastrado e não tem Estadia aberta, iremos registrar entrada
+        else:
+            return controller.registerEntry(placa)
+    return render_template("index.html")    
+
+# Rota de cadastro, tela de cadastro de veículo
+@app.route("/cadastro", methods=["GET", "POST"])
+def cadastro():
+    placa = request.args.get('placa')  # pode vir None se não vier na URL
+    if request.method == "POST":
+        pass
+    return render_template("cadastro.html", placa=placa)
+
+# Rota de visualização de clientes, tela de veículos cadastrados
+@app.route("/clientes", methods=["GET", "POST"])
+def clientes():
+    if request.method == 'POST':
+        vehicles = controller.getVehicles()
+        return render_template("clientes.html", vehicles=vehicles)
+    return render_template("clientes.html")
+
+# Rota de visualização de estadias, tela dos registros de estadia de determinado veículo
+@app.route("/estadias", methods=["GET", "POST"])
+def estadias():
+    if request.method == 'POST':
+    return render_template("estadias.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
