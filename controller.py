@@ -2,6 +2,8 @@
 from classes.Carro import Carro
 from classes.Moto import Moto
 from classes.Estadia import Estadia
+from repository.database import conectar, Veiculo as VeiculoDB, Estadia as EstadiaDB, Vaga
+from sqlalchemy.exc import IntegrityError
 
 """
     Funções a serem criadas:
@@ -15,43 +17,108 @@ from classes.Estadia import Estadia
 """
     Função para validar a existência de uma placa no banco de dados.
 """
-def validatePlate(plate: str):
-
-    # FAZER A VALIDAÇÃO
-
-    return True
+def validatePlate(plate: str) -> bool: #função OK
+    """
+    Valida a existência de uma placa no banco de dados.
+    
+    Args:
+        plate (str): Placa do veículo (será convertida para maiúsculas)
+        
+    Returns:
+        bool: True se existe, False caso contrário
+    """
+    try:
+        sessao = conectar()
+        plate_upper = plate.strip().upper()
+        veiculo = sessao.query(VeiculoDB).filter(VeiculoDB.placa == plate_upper).first()
+        sessao.close()
+        if veiculo:
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(f"Erro ao validar placa: {e}")
+        return False
 
 """
     Função para validar o status de um veiculo no banco de dados.
 
     status - True: Estacionado False: Não Estacionado
 """
-def validateStatus(plate: str):
-
-    # FAZER A VALIDAÇÃO
-
-    return True
+def validateStatus(plate: str) -> bool: #função OK
+    """
+    Valida o status de um veículo (se está estacionado ou não).
+    
+    Args:
+        plate (str): Placa do veículo
+        
+    Returns:
+        bool: True se estacionado, False caso contrário
+    """
+    try:
+        sessao = conectar()
+        plate_upper = plate.strip().upper()
+        
+        # Busca a estadia aberta (sem data de saída)
+        estadia_aberta = (sessao.query(EstadiaDB)
+                           .filter(EstadiaDB.placa == plate_upper, EstadiaDB.saida.is_(None)).first())
+        sessao.close()
+        if estadia_aberta:
+            return True # Tem estadia aberta desse veículo, está estacionado
+        else:
+            return False # Não tem estadia aberta desse veículo, não está estacionado
+        
+    except Exception as e:
+        print(f"Erro ao validar status: {e}")
+        return False
 
 """
     Função para pegar a Estadia em formato de classe
 """
-def getStay(plate: str):
+def getStay(plate: str): #função OK
+    """
+    Recupera a estadia aberta (sem saída) de um veículo.
+    
+    Args:
+        plate (str): Placa do veículo
+        
+    Returns:
+        Estadia: Objeto da estadia, ou None se não houver estadia aberta
+    """
     try:
-        if validateStatus(plate):
-            spot = "vaga"
-            entry = "entrada"
-            out = "saída"
-
-            # FAZER A LOGICA PARA PREENCHER AS VARIAVEIS (BUSCANDO DO DB)
-
-            Stay = Estadia(vaga=spot, placa=plate, entrada=entry, saida=out)
-
-            return Stay
-        else:
-            print("Veiculo não está em uma vaga")
-
-    except NameError:
-        print("Error:", NameError)
+        if validateStatus(plate) == False:
+            print("Veículo não está estacionado")
+            return None
+        
+        sessao = conectar()
+        plate_upper = plate.strip().upper()
+        
+        estadia_db = (sessao.query(EstadiaDB)
+                      .filter(EstadiaDB.placa == plate_upper, EstadiaDB.saida.is_(None))
+                      .order_by(EstadiaDB.id.desc())
+                      .first())
+        
+        # Faz mais uma verificação se realmente há estadia aberta. Se não achou na query, retorna None.
+        if not estadia_db:
+            sessao.close()
+            return None
+        
+        # Converter de Datetime para String, para ser possível a criação do objeto de Estadia
+        entrada_str = estadia_db.entrada.strftime('%d/%m/%Y %H:%M:%S') if estadia_db.entrada is not None else ""
+        saida_str = estadia_db.saida.strftime('%d/%m/%Y %H:%M:%S') if estadia_db.saida is not None else ""
+        
+        estadia = Estadia(
+            vaga=estadia_db.vaga,
+            placa=estadia_db.placa,
+            entrada=entrada_str,
+            saida=saida_str
+        )
+        
+        sessao.close()
+        return estadia
+    except Exception as e:
+        print(f"Erro ao recuperar estadia: {e}")
+        return None
 
 
 """
