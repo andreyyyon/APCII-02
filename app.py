@@ -16,9 +16,9 @@ iniciar_banco()
     controller.py - definir modulo de funções utilizadas
 
     Rotas:
-    /         - Tela inicial
+    /index    - Tela inicial
     /cadastro - Tela de cadastro
-    /veiculos - Tela de consulta de veiculos
+    /clientes - Tela de consulta de veiculos
     /estadias - Tela de consulta de estadias
 
     - Tela inicial, contem um input que deverá ser inserido a PLACA do veículo:
@@ -68,3 +68,27 @@ iniciar_banco()
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+# Rotas Principais
+
+@app.route("/")
+@app.route("/index", methods=["GET", "POST"])
+def index():
+    if request.method == "POST":
+        pass    
+
+
+@app.route("/cadastro", methods=["GET", "POST"])
+def cadastro():
+    if request.method == "POST":
+        pass
+
+
+@app.route("/clientes", methods=["GET", "POST"])
+def clientes():
+    return render_template("clientes.html")
+
+
+@app.route("estadias", methods=["GET", "POST"])
+def estadias():
+    pass
