@@ -1,4 +1,4 @@
-from Veiculo import Veiculo
+from classes.Veiculo import Veiculo
 
 """
     {Python} class Carro
