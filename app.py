@@ -1,124 +1,70 @@
-
 # app.py
 from flask import Flask, render_template, request, redirect, url_for, flash
 from repository.database import iniciar_banco
 from repository.estacionamento_repo import processar_placa
+import controller
 
 app = Flask(__name__)
 app.secret_key = "troque-esta-chave"
 iniciar_banco()
 
-@app.route('/', methods=['GET', 'POST'])
-def home():
-    """
-    Rota Principal: Exibe o formulário de Entrada/Saída. 
-    Trata o POST do formulário de placa.
-    """
-    mensagem = request.args.get('mensagem_sucesso')
-    
-    if request.method == 'POST':
-        placa = request.form.get('placa').strip().upper()
+"""
+    Planejamento:
+
+    app.py - definir rotas e chamadas de função
+    /class/* - definir classes e metodos
+    controller.py - definir modulo de funções utilizadas
+
+    Rotas:
+    /         - Tela inicial
+    /cadastro - Tela de cadastro
+    /veiculos - Tela de consulta de veiculos
+    /estadias - Tela de consulta de estadias
+
+    - Tela inicial, contem um input que deverá ser inserido a PLACA do veículo:
+        * Validar existencia do veículo;
+        * Validar status do veículo (Estacionado ou não);
+        * Se estiver estacionado, pede se deseja realmente registrar a entrada; (Fazer em JS)
+        * Se não estiver estacionado, pede se deseja realmente registrar a saída;
+        * Fazer feedback para: Veículo não encontrado, Entrada Registrada, Saída Registrada;
+
+        funções:
+        createStay - Chamada ao incluir entrada, cria a estadia
+        registerEntry - Grava os valores de entrada no registro da estadia em aberto
+        registerOut - Grava os valores de saída no registro de estadia em aberto
+        updateStatus - Atualiza o status do veiculo conforme o parametro passado
+        validatePlate - Valida existência da placa
+        validateStatus - Valida o status da placa passada por parametro
+
+    - Tela de cadastro, contem um formulario com os dados da classe do veículo
+        * Validar existencia do veículo;
+        * Validar consistencia dos dados preenchidos;
+        * Fazer feedback: Veiculo já existente, Veículo incluido com sucesso;
         
-        placa_encontrada_no_bd = False 
-        
-        if not placa_encontrada_no_bd:
-            mensagem = f"Placa {placa} não encontrada. Por favor, cadastre o veículo."
-            return render_template('index.html', mensagem=mensagem, placa_nao_encontrada=placa)
-        
-        mensagem = f"Placa {placa} processada com sucesso!"
-        
-    return render_template('index.html', mensagem=mensagem)
+        funções:
+        validatePlate - Valida existência da placa
+        createVehicle - Cria veículo 
 
- # @app.route("/", methods=["GET", "POST"])
-# def index():
-#     if request.method == "GET":
-#         # Exibe o formulário de entrada
-#         return render_template("index.html")
+    - Tela de Consulta de estadias, contem um input que deverá ser inserido a PLACA do veículo, e caso renderizado com o objeto contendo estadias, 
+      deve listar as estadias do veículo em forma da table
+        * Validar existencia do veículo;
+        * Buscar estadias do veículo e retornar o objeto para o HTML;
+        * No HTML listar as estadias;
 
-#     # Se for POST, processa a placa digitada
-#     placa = request.form.get("input_placa", "").strip()
-#     if not placa:
-#         flash("Por favor, informe a placa do veículo.", "error")
-#         return redirect(url_for("index"))
+        funções:
+        validatePlate - Valida existência da placa
+        getStays - Busca todas as estadias do veículo e retorna o array de objetos (estadias)
 
-#     try:
-#         resultado = processar_placa(placa)
-#         acao = resultado["acao"]
+    - Tela de Consulta de Veiculos, contém uma table com todos os clientes, com dois botões, de edição e exclusão do veículo
+        * Exibe em tela todos os clientes cadastrados;
+        * Opção de exclusão remove o veiculo da tabela e recarrega a HTML do component;
+        * Opção de edição abre um modal de atualização com os dados pré preenchidos;
 
-#         if acao == "registrar_cliente":
-#             # Se a placa ainda não existe, redireciona para a página de cadastro
-#             return redirect(url_for("registrar_cliente", placa=resultado["placa"]))
-
-#         elif acao == "registrar_saida":
-#             flash(f"Saída registrada para {resultado['placa']} (vaga {resultado['vaga']}).", "success")
-#             return redirect(url_for("index"))
-
-#         elif acao == "registrar_entrada":
-#             flash(f"Entrada registrada para {resultado['placa']} (vaga {resultado['vaga']}).", "success")
-#             return redirect(url_for("index"))
-
-#         else:
-#             flash("Ação desconhecida.", "error")
-#             return redirect(url_for("index"))
-
-#     except Exception as e:
-#         flash(str(e), "error")
-#         return redirect(url_for("index"))
-  
-  
-@app.route('/cadastro', methods=['GET', 'POST'])
-def cadastro():
-    """
-    Rota de Cadastro: Lida com o formulário multipassos de cadastro.
-    CORREÇÃO: O template chamado é 'cadastro.html'.
-    """
-    form_data = request.args.to_dict()
-    step = int(form_data.get('step', 1))
-    
-    if request.method == 'POST':
-        data = request.form.to_dict()
-        next_step = step + 1 
-        
-        if step == 2:
-            placa = data.get('placa')
-            
-            print(f"CADASTRO FINALIZADO: {data}")
-
-            return redirect(url_for('home', mensagem_sucesso=f"Veículo {placa} cadastrado!"))
-
-        args = {k: v for k, v in data.items() if v}
-        args['step'] = next_step
-        
-        return redirect(url_for('cadastro', **args))
-    
-    return render_template('cadastro.html', 
-                           step=step, 
-                           form_data=form_data)
-
-@app.route('/clientes')
-def listar_clientes():
-    """
-    Rota de Clientes: Lista os clientes. 
-    CORREÇÃO: O nome da função é 'listar_clientes'.
-    """
-    clientes = [
-        {
-            "placa": "123",
-            "modelo": "HB20",
-            "cor": "Preto",
-            "tipo": "Carro",
-            "vaga": "XYZ"
-        }
-    ] # Dados reais viriam do banco de dados
-    return render_template('clientes.html', clientes=clientes) 
-
-@app.route('/estadias')
-def estadias():
-    """
-    Rota de Estadias: Exibe e consulta estadias.
-    CORREÇÃO: Assumindo que o template correto é 'estadias.html'
-    """
-    return render_template('estadias.html') 
+        funções:
+        getVehicles - Busca todos os veículos e retorna um array de objetos (veículos)
+        deleteVehicle - Deleta veículo da tabela e recarrega o component
+        updateVehicle - Chamado após o submit do modal, faz a validação da consistencia dos dados e recarrega o component
+"""
 
 if __name__ == "__main__":
     app.run(debug=True)
