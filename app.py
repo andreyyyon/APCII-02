@@ -16,9 +16,9 @@ iniciar_banco()
     controller.py - definir modulo de funções utilizadas
 
     Rotas:
-    /         - Tela inicial
+    /index    - Tela inicial
     /cadastro - Tela de cadastro
-    /veiculos - Tela de consulta de veiculos
+    /clientes - Tela de consulta de veiculos
     /estadias - Tela de consulta de estadias
 
     - Tela inicial, contem um input que deverá ser inserido a PLACA do veículo:
@@ -65,6 +65,40 @@ iniciar_banco()
         deleteVehicle - Deleta veículo da tabela e recarrega o component
         updateVehicle - Chamado após o submit do modal, faz a validação da consistencia dos dados e recarrega o component
 """
+
+# Rota index, tela de registro de entrada/saída
+@app.route("/", methods=["GET", "POST"])
+@app.route("/index", methods=["GET", "POST"])
+def index():
+    if request.method == "POST":
+        pass
+    return render_template("index.html")    
+
+# Rota de cadastro, tela de cadastro de veículo
+@app.route("/cadastro", methods=["GET", "POST"])
+def cadastro():
+    if request.method == "POST":
+        if controller.validatePlate():
+            type = request.form.get('type')
+            placa = request.form.get('placa')
+            modelo = request.form.get('modelo')
+            cor = request.form.get('cor')
+            tamanho = request.form.get('tamanho')
+            tipoMoto = request.form.get('tipoMoto')
+        else:
+            flash("Placa não encotrada", "sucess")
+
+    return render_template("cadastro.html")
+
+# Rota de visualização de clientes, tela de veículos cadastrados
+@app.route("/clientes", methods=["GET", "POST"])
+def clientes():
+    return render_template("clientes.html")
+
+# Rota de visualização de estadias, tela dos registros de estadia de determinado veículo
+@app.route("/estadias", methods=["GET", "POST"])
+def estadias():
+    return render_template("estadias.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
