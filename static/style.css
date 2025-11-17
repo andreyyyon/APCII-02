@@ -23,6 +23,15 @@ body {
 .logo {
     font-size: 1.4em;
     font-weight: bold;
+    text-decoration: none;
+}
+
+.logo a {
+    color: white;
+}
+
+.logo .material-symbols-outlined {
+    color: white;
 }
 
 .menu {

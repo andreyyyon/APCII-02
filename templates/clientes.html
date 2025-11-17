@@ -20,8 +20,16 @@
                         <td>{{ cliente.placa }}</td>
                         <td>{{ cliente.modelo }}</td>
                         <td>{{ cliente.cor }}</td>
-                        <td>{{ cliente.tipo }}</td>
-                        <td>{{ cliente.vaga }}</td>
+                        <td>
+                            {% if cliente.tamanho is defined and cliente.tamanho %}
+                                Carro
+                            {% elif cliente.eletrica is defined and cliente.eletrica is not none %}
+                                Moto
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>{{ cliente.vaga | default(cliente.vaga_atual | default('-')) }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

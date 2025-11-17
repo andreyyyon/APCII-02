@@ -10,9 +10,11 @@
     <header>
         <nav class="navbar">
             <div class="logo">
-                <span class="material-symbols-outlined" style="font-size: 45px;">
-                    directions_car
-                </span>
+                <a href="{{ url_for('index') }}">
+                    <span class="material-symbols-outlined" style="font-size: 45px; cursor: pointer;">
+                        directions_car
+                    </span>
+                </a>
             </div>
             <ul class="menu">
                 <li><a href="{{ url_for('index') }}">Entrada/Saída</a></li>
