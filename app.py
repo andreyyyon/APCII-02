@@ -109,7 +109,7 @@ def clientes():
 @app.route("/estadias", methods=["GET", "POST"])
 def estadias():
     if request.method == 'POST':
-    return render_template("estadias.html")
+        return render_template("estadias.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
