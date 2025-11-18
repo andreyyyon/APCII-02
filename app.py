@@ -181,3 +181,30 @@ def estadias():
     return render_template("estadias.html", placa_buscada=placa_buscada, estadias=estadias)
 if __name__ == "__main__":
     app.run(debug=True)
+
+# Rotas Principais
+
+# Rota index, tela de registro de entrada/saída
+@app.route("/", methods=["GET", "POST"])
+@app.route("/index", methods=["GET", "POST"])
+def index():
+    if request.method == "POST":
+        pass
+    return render_template("index.html")    
+
+# Rota de cadastro, tela de cadastro de veículo
+@app.route("/cadastro", methods=["GET", "POST"])
+def cadastro():
+    if request.method == "POST":
+        pass
+    return render_template("cadastro.html")
+
+# Rota de visualização de clientes, tela de veículos cadastrados
+@app.route("/clientes", methods=["GET", "POST"])
+def clientes():
+    return render_template("clientes.html")
+
+# Rota de visualização de estadias, tela dos registros de estadia de determinado veículo
+@app.route("/estadias", methods=["GET", "POST"])
+def estadias():
+    return render_template("estadias.html")
