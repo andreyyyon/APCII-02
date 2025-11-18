@@ -1,31 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="form-section">
-    <h2>Registro de Entrada / Saída</h2>
-
-    {% if mensagem %}
-        <div class="mensagem-info">{{ mensagem }}</div>
-    {% endif %}
-
-    <form action="{{ url_for('index') }}" method="post" class="form-card">
-        <!-- <div class="form-group"> -->
-            <label for="placa">Placa do Veículo</label>
-            <input type="text" 
-                    id="placa" 
-                    name="placa" 
-                    placeholder="Ex: ABC1234" 
-                    required>
-            <button type="submit">Registrar</button>
-        <!-- </div> -->
-    </form>
-
-    {% if not mensagem %}
-        <p class="empty-message">
-            Insira a placa para registrar a entrada ou saída.
-        </p>
-    {% endif %}
+<section class="card">
+    <h3 class="card-header">Registro de Entrada / Saída</h3>
+    <div class="card-body">
+        {% if mensagem %}
+            <div class="alert alert-{{ alert }} alert-dismissible fade show" role="alert">
+                {{ mensagem }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+        
+        <form action="{{ url_for('index') }}" method="post" class="mb-3">
+            <label class="form-label" for="placa">Placa do Veículo</label>
+            <div class="input-group">
+                <input type="text" 
+                        id="placa" 
+                        name="placa" 
+                        placeholder="Ex: ABC1234" 
+                        class="form-control">
+                <button class="btn btn-primary" type="submit">Registrar</button>
+            </div>
+            <div class="form-text"">Insira a placa para registrar a entrada ou saída.</div>
+        </form>
+    </div>
 </section>
-    
 {% endblock %}
 

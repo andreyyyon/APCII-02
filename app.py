@@ -80,7 +80,7 @@ def index():
 
         if not placa:
             mensagem = "Por favor, informe a placa."
-            return render_template("index.html", mensagem=mensagem)
+            return render_template("index.html", mensagem=mensagem, alert="dark")
 
         # Se não cadastrada redireciona para cadastro com a placa
         if not controller.validatePlate(placa):
@@ -96,9 +96,9 @@ def index():
 
         # Se a operação for de entrada, mostra também a vaga em que foi colocado.
         if "spot" in resultado and resultado["spot"]:
-            mensagem += f" — Vaga: {resultado['spot']}"
+            mensagem += f" - Vaga: {resultado['spot']}"
 
-    return render_template("index.html", mensagem=mensagem)    
+    return render_template("index.html", mensagem=mensagem, alert="success")    
 
 # Rota de cadastro, tela de cadastro de veículo
 @app.route("/cadastro", methods=["GET", "POST"])
