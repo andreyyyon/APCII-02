@@ -73,44 +73,112 @@ iniciar_banco()
 @app.route("/", methods=["GET", "POST"])
 @app.route("/index", methods=["GET", "POST"])
 def index():
+    mensagem = None
+    placa = ''
     if request.method == "POST":
-        placa = request.form.get('placa')
+        placa = request.form.get('placa', '').strip().upper()
 
-        # Verificar se há o registro da placa
+        if not placa:
+            mensagem = "Por favor, informe a placa."
+            return render_template("index.html", mensagem=mensagem, alert="dark")
+
+        # Se não cadastrada redireciona para cadastro com a placa
         if not controller.validatePlate(placa):
             return redirect(url_for('cadastro', placa=placa))
         
-        # Se estiver estacionado, registrar saída
-        if controller.validateStatus:
-            return controller.registerOut(placa)
-        
-        # Se estiver já cadastrado e não tem Estadia aberta, iremos registrar entrada
+        # Se estiver estacionado, registrar saída, se não registrar entrada
+        if controller.validateStatus(placa):
+            resultado = controller.registerOut(placa)
         else:
-            return controller.registerEntry(placa)
-    return render_template("index.html")    
+            resultado = controller.registerEntry(placa)
+
+        mensagem = resultado.get("message", "Operação Realizada.")
+
+        # Se a operação for de entrada, mostra também a vaga em que foi colocado.
+        if "spot" in resultado and resultado["spot"]:
+            mensagem += f" - Vaga: {resultado['spot']}"
+
+    return render_template("index.html", mensagem=mensagem, alert="success")    
 
 # Rota de cadastro, tela de cadastro de veículo
 @app.route("/cadastro", methods=["GET", "POST"])
 def cadastro():
-    placa = request.args.get('placa')  # pode vir None se não vier na URL
+    placa = request.args.get('placa', '')
+    modelo = ''
+    cor = ''
+    tipo = 'C'
+    tamanho = None
+    tipoMoto = None
+    mensagem = None
     if request.method == "POST":
-        pass
-    return render_template("cadastro.html", placa=placa)
+        placa = request.form.get('placa', '').strip().upper()
+        modelo = request.form.get('modelo', '').strip()
+        cor = request.form.get('cor', '').strip()
+        tipo = request.form.get('type', 'C')
+        tamanho = request.form.get('tamanho')
+        tipoMoto = request.form.get('tipoMoto')
+
+        # Validações:
+
+        if not placa:
+            mensagem = "Placa é obrigatória."
+            return render_template("cadastro.html", placa=placa, modelo=modelo,
+                                   cor=cor, tipo=tipo, tamanho=tamanho, tipoMoto=tipoMoto, mensagem=mensagem)
+
+        if not modelo:
+            mensagem = "Modelo é obrigatório."
+            return render_template("cadastro.html", placa=placa, modelo=modelo,
+                                   cor=cor, tipo=tipo, tamanho=tamanho, tipoMoto=tipoMoto, mensagem=mensagem)
+
+        if not cor:
+            mensagem = "Cor é obrigatória."
+            return render_template("cadastro.html", placa=placa, modelo=modelo,
+                                   cor=cor, tipo=tipo, tamanho=tamanho, tipoMoto=tipoMoto, mensagem=mensagem)
+        
+        # Caso seja carro:
+        if tipo == 'C':
+            tamanho = request.form.get('tamanho')  # 'M' ou 'G'
+            eletric = None
+        # Caso seja moto:
+        else:
+            tipoMoto = request.form.get('tipoMoto')  # 'combustao' ou 'eletrica'
+            eletric = True if tipoMoto == 'eletrica' else False
+            tamanho = None
+
+        resultado = controller.createVehicle(plate=placa, vehicle_type=tipo, model=modelo, color=cor, size=tamanho, eletric=eletric)
+
+        # Tratamento em caso de insucesso no método
+        if resultado.get('sucess', False):
+            return redirect(url_for('index'))
+        else:
+            mensagem = resultado.get('message', 'Erro ao cadastrar veiculo.')
+            return render_template("cadastro.html", placa=placa, modelo=modelo, cor=cor, tipo=tipo, tamanho=tamanho, tipoMoto=tipoMoto, mensagem=mensagem)
+        
+            
+    return render_template("cadastro.html", placa=placa, modelo=modelo, cor=cor, tipo=tipo, tamanho=tamanho, tipoMoto=tipoMoto, mensagem=mensagem)
 
 # Rota de visualização de clientes, tela de veículos cadastrados
 @app.route("/clientes", methods=["GET", "POST"])
 def clientes():
-    if request.method == 'POST':
-        vehicles = controller.getVehicles()
-        return render_template("clientes.html", vehicles=vehicles)
-    return render_template("clientes.html")
+
+    lista_clientes = controller.getVehicles()
+    return render_template("clientes.html", clientes=lista_clientes)
 
 # Rota de visualização de estadias, tela dos registros de estadia de determinado veículo
 @app.route("/estadias", methods=["GET", "POST"])
 def estadias():
-    if request.method == 'POST':
-    return render_template("estadias.html")
+    placa_buscada = ''
+    estadias = []
 
+    if request.method == "POST":
+        placa_buscada = request.form.get('placa', '').strip().upper()
+        if placa_buscada:
+            try:
+                estadias = controller.getStays(placa_buscada)
+            except Exception as e:
+                print(f"Erro ao buscar estadias: {e}")
+                estadias = []
+    return render_template("estadias.html", placa_buscada=placa_buscada, estadias=estadias)
 if __name__ == "__main__":
     app.run(debug=True)
 

@@ -485,6 +485,8 @@ def getVehicles() -> list: # função OK
                 )
             else:
                 continue
+            
+            veiculo.vaga = veiculo_db.vaga_atual
             veiculos.append(veiculo)
         
         sessao.close()
