@@ -1,29 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="card">
-    <h3 class="card-header">Registro de Entrada / Saída</h3>
-    <div class="card-body">
-        {% if mensagem %}
-            <div class="alert alert-{{ alert }} alert-dismissible fade show" role="alert">
-                {{ mensagem }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endif %}
-        
-        <form action="{{ url_for('index') }}" method="post" class="mb-3">
-            <label class="form-label" for="placa">Placa do Veículo</label>
-            <div class="input-group">
-                <input type="text" 
-                        id="placa" 
-                        name="placa" 
-                        placeholder="Ex: ABC1234" 
-                        class="form-control">
-                <button class="btn btn-primary" type="submit">Registrar</button>
-            </div>
-            <div class="form-text"">Insira a placa para registrar a entrada ou saída.</div>
-        </form>
-    </div>
+<section class="mb-5">
+    <h3 class="text-center pb-4">Seja bem-vindo ao Estacionamento Web.</h3>
+    {% if mensagem %}
+        <div class="alert alert-{{ alert }} alert-dismissible fade show position-absolute top-0 start-50 translate-middle-x" style="margin-top: 100px;" role="alert">
+            {{ mensagem }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
+    
+    <form action="{{ url_for('index') }}" method="post" class="m-auto" style="max-width: 50%">
+        <div class="input-group input-group-lg">
+            <input type="text" 
+                    id="placa" 
+                    name="placa" 
+                    placeholder="Digite a placa do veículo para dar entrada/saída..." 
+                    class="form-control rounded-start-pill">
+            <button class="btn btn-dark rounded-end-pill" type="submit">Registrar</button>
+        </div>
+        <!-- <div class="form-text"">Insira a placa para registrar a entrada ou saída.</div> -->
+    </form>
 </section>
 {% endblock %}
 
