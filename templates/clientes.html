@@ -1,43 +1,217 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="list-section">
-    <h2>Lista de Clientes Cadastrados</h2>    
+<section class="list-section container mt-4">
+    <h2 class="mb-3">Lista de Clientes Cadastrados</h2>  
+    {% if mensagem %}
+      <div class="alert alert-{{ alert | default('info') }}">{{ mensagem }}</div>
+    {% endif %}
     {% if clientes %}
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Placa</th>
-                    <th>Modelo</th>
-                    <th>Cor</th>
-                    <th>Tipo</th>
-                    <th>Vaga Atual</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for cliente in clientes %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-light">
                     <tr>
-                        <td>{{ cliente.placa }}</td>
-                        <td>{{ cliente.modelo }}</td>
-                        <td>{{ cliente.cor }}</td>
-                        <td>
-                            {% if cliente.tamanho is defined and cliente.tamanho %}
-                                Carro
-                            {% elif cliente.eletrica is defined and cliente.eletrica is not none %}
-                                Moto
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                        <td>{{ cliente.vaga | default(cliente.vaga_atual | default('-')) }}</td>
+                        <th>Placa</th>
+                        <th>Modelo</th>
+                        <th>Cor</th>
+                        <th>Tipo</th>
+                        <th>Vaga Atual</th>
+                        <th class="text-center">Editar</th>
+                        <th class="text-center">Excluir</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for cliente in clientes %}
+                        <tr>
+                            <td class="td-placa">{{ cliente.placa }}</td>
+                            <td class="td-modelo">{{ cliente.modelo }}</td>
+                            <td class="td-cor">{{ cliente.cor }}</td>
+                            <td class="td-tipo">
+                                {% if cliente.tamanho is defined and cliente.tamanho %}
+                                    Carro
+                                {% elif cliente.eletrica is defined and cliente.eletrica is not none %}
+                                    Moto
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="td-vaga">{{ cliente.vaga | default(cliente.vaga_atual | default('-')) }}</td>
+
+                            <!-- Coluna Editar (abre modal) -->
+                            <td class="text-center">
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline-primary btn-edit"
+                                    title="Editar"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editClienteModal"
+                                    data-placa="{{ cliente.placa }}"
+                                    data-modelo="{{ cliente.modelo }}"
+                                    data-cor="{{ cliente.cor }}"
+                                    data-vaga="{{ cliente.vaga | default(cliente.vaga_atual | default('')) }}"
+                                    data-tamanho="{{ cliente.tamanho | default('') }}"
+                                    data-eletrica="{{ cliente.eletrica | default('') }}"
+                                    data-tipo="{% if cliente.tamanho %}carro{% elif cliente.eletrica is not none %}moto{% else %}{% endif %}"
+                                >
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </td>
+
+                            <!-- Coluna Excluir -->
+                            <td class="text-center">
+                                <form method="post" action="{{ url_for('clientes') }}" style="display:inline;" onsubmit="return confirm('Deseja realmente excluir este registro?');">
+                                    <input type="hidden" name="action" value="excluir">
+                                    <input type="hidden" name="placa" value="{{ cliente.placa }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
-        <div class="empty-message">Nenhum veículo cadastrado encontrado no sistema.</div>
+        <div class="alert alert-secondary">Nenhum veículo cadastrado encontrado no sistema.</div>
     {% endif %}
 </section>
-    
-{% endblock %}
 
+<!-- Modal de Edição -->
+<div class="modal fade" id="editClienteModal" tabindex="-1" aria-labelledby="editClienteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- FORM: envia para a mesma rota /clientes e inclui action=editar -->
+      <form id="editClienteForm" method="post" action="{{ url_for('clientes') }}">
+        <input type="hidden" name="action" value="editar">
+        <!-- Hidden que garante que o backend receba a placa correta -->
+        <input type="hidden" name="placa" id="modal-cliente-placa">
+
+        <div class="modal-header">
+          <h5 class="modal-title" id="editClienteModalLabel">Editar Cliente</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label for="cliente-placa" class="form-label">Placa</label>
+              <!-- Se você não quer que o usuário altere a placa, remova name="placa" daqui.
+                   Mantive name ausente para evitar conflito com hidden. -->
+              <input type="text" class="form-control" id="cliente-placa" value="" readonly>
+            </div>
+
+            <div class="col-md-4">
+              <label for="cliente-modelo" class="form-label">Modelo</label>
+              <input type="text" class="form-control" id="cliente-modelo" name="modelo" required>
+            </div>
+
+            <div class="col-md-4">
+              <label for="cliente-cor" class="form-label">Cor</label>
+              <input type="text" class="form-control" id="cliente-cor" name="cor">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Tipo</label>
+              <select id="cliente-tipo" name="tipo" class="form-select">
+                <option value="">-</option>
+                <option value="carro">Carro</option>
+                <option value="moto">Moto</option>
+              </select>
+            </div>
+
+            <div class="col-md-6 carro-field d-none">
+              <label for="cliente-tamanho" class="form-label">Tamanho</label>
+              <select class="form-control" id="cliente-tamanho" name="tamanho">
+                <option value=""></option>
+                <option value="M">Médio</option>
+                <option value="G">Grande</option>
+              </select>
+            </div>
+
+            <div class="col-md-6 moto-field d-none">
+              <div class="form-check mt-3">
+                    <input type="hidden" name="eletrica" value="0">
+                    <input class="form-check-input" type="checkbox" value="1" id="cliente-eletrica" name="eletrica">
+                    <label class="form-check-label" for="cliente-eletrica">Elétrica</label>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="cliente-vaga" class="form-label">Vaga Atual</label>
+              <input type="text" class="form-control" id="cliente-vaga" name="vaga">
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar alterações</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Script limpo para popular modal (apenas 1 listener) -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    function updateTipoFields(tipo) {
+        const carroFields = document.querySelectorAll('.carro-field');
+        const motoFields = document.querySelectorAll('.moto-field');
+        if (tipo === 'carro') {
+            carroFields.forEach(el => el.classList.remove('d-none'));
+            motoFields.forEach(el => el.classList.add('d-none'));
+        } else if (tipo === 'moto') {
+            motoFields.forEach(el => el.classList.remove('d-none'));
+            carroFields.forEach(el => el.classList.add('d-none'));
+        } else {
+            carroFields.forEach(el => el.classList.add('d-none'));
+            motoFields.forEach(el => el.classList.add('d-none'));
+        }
+    }
+
+    const tipoSelect = document.getElementById('cliente-tipo');
+    tipoSelect.addEventListener('change', function () {
+        updateTipoFields(this.value);
+    });
+
+    // Único listener para os botões de editar
+    const editButtons = document.querySelectorAll('.btn-edit');
+    editButtons.forEach(btn => btn.addEventListener('click', function () {
+        // Ler dados do data-attributes do botão
+        const placa = this.getAttribute('data-placa') || '';
+        const modelo = this.getAttribute('data-modelo') || '';
+        const cor = this.getAttribute('data-cor') || '';
+        const vaga = this.getAttribute('data-vaga') || '';
+        const tamanho = this.getAttribute('data-tamanho') || '';
+        const eletrica = this.getAttribute('data-eletrica') || '';
+
+        // Hidden e visível
+        document.getElementById('modal-cliente-placa').value = placa;
+        document.getElementById('cliente-placa').value = placa; // visível (readonly)
+
+        // Outros campos editáveis
+        document.getElementById('cliente-modelo').value = modelo;
+        document.getElementById('cliente-cor').value = cor;
+        document.getElementById('cliente-vaga').value = vaga;
+
+        // dentro do listener de cada .btn-edit
+        const tipo_attr = this.getAttribute('data-tipo') || '';
+        tipoSelect.value = tipo_attr;
+        updateTipoFields(tipo_attr);
+
+        tipoSelect.value = tipo;
+        updateTipoFields(tipo);
+
+        // preencher campos específicos
+        document.getElementById('cliente-tamanho').value = tamanho;
+
+        const elEletrica = document.getElementById('cliente-eletrica');
+        elEletrica.checked = (eletrica === 'True' || eletrica === 'true' || eletrica === '1');
+
+        // Importante: NÃO alteramos form.action aqui — o form sempre POSTa para /clientes
+    }));
+});
+</script>
+{% endblock %}

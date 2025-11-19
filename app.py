@@ -160,7 +160,92 @@ def cadastro():
 # Rota de visualização de clientes, tela de veículos cadastrados
 @app.route("/clientes", methods=["GET", "POST"])
 def clientes():
+    mensagem = None
+    alert = "info"
 
+    # POST -> ações (editar / excluir)
+    if request.method == "POST":
+        action = request.form.get('action', '').strip().lower()
+        placa = request.form.get('placa', '').strip().upper()  # garantimos maiúsculas
+
+        if not placa:
+            mensagem = "Placa não informada."
+            alert = "danger"
+            # Recarregar lista e devolver template com mensagem
+            lista_clientes = controller.getVehicles()
+            return render_template("clientes.html", clientes=lista_clientes, mensagem=mensagem, alert=alert)
+
+        # --- AÇÃO: editar ---
+        if action == 'editar':
+            modelo = request.form.get('modelo', '').strip()
+            cor = request.form.get('cor', '').strip()
+            vaga = request.form.get('vaga', '').strip() or None
+            tipo = request.form.get('tipo', '').strip()  # 'carro' | 'moto' | ''
+            tamanho = request.form.get('tamanho', '').strip() or None
+            eletrica_raw = request.form.get('eletrica', '0')  # 0 ou 1
+            eletrica_bool = True if eletrica_raw == '1' else False
+
+            # Determinar params para controller.updateVehicle
+            size_param = tamanho if tipo == 'carro' else None
+            eletric_param = eletrica_bool if tipo == 'moto' else None
+
+            try:
+                resultado = controller.updateVehicle(
+                    plate=placa,
+                    model=modelo if modelo != '' else None,
+                    color=cor if cor != '' else None,
+                    size=size_param,
+                    eletric=eletric_param,
+                    vaga=vaga
+                )
+                # tratar retorno do controller
+                if isinstance(resultado, dict):
+                    if resultado.get('success', resultado.get('sucess', True)) is True:
+                        mensagem = resultado.get('message', 'Veículo atualizado com sucesso!')
+                        alert = 'success'
+                    else:
+                        mensagem = resultado.get('message', 'Erro ao atualizar veículo.')
+                        alert = 'danger'
+                else:
+                    mensagem = 'Veículo atualizado (retorno inesperado do controller).'
+                    alert = 'success'
+            except Exception as e:
+                print(f"Erro em editar cliente (controller.updateVehicle): {e}")
+                mensagem = 'Erro ao atualizar veículo (ver logs).'
+                alert = 'danger'
+
+            lista_clientes = controller.getVehicles()
+            return render_template("clientes.html", clientes=lista_clientes, mensagem=mensagem, alert=alert)
+
+        # --- AÇÃO: excluir ---
+        elif action == 'excluir':
+            try:
+                resultado = controller.deleteVehicle(plate=placa)
+                if isinstance(resultado, dict):
+                    if resultado.get('success', True) is True:
+                        mensagem = resultado.get('message', 'Veículo excluído com sucesso!')
+                        alert = 'success'
+                    else:
+                        mensagem = resultado.get('message', 'Erro ao excluir veículo.')
+                        alert = 'danger'
+                else:
+                    mensagem = 'Veículo excluído (retorno inesperado do controller).'
+                    alert = 'success'
+            except Exception as e:
+                print(f"Erro em excluir cliente (controller.deleteVehicle): {e}")
+                mensagem = 'Erro ao excluir veículo (ver logs).'
+                alert = 'danger'
+
+            lista_clientes = controller.getVehicles()
+            return render_template("clientes.html", clientes=lista_clientes, mensagem=mensagem, alert=alert)
+
+        else:
+            mensagem = 'Ação inválida.'
+            alert = 'warning'
+            lista_clientes = controller.getVehicles()
+            return render_template("clientes.html", clientes=lista_clientes, mensagem=mensagem, alert=alert)
+
+    # GET -> apenas renderiza a lista
     lista_clientes = controller.getVehicles()
     return render_template("clientes.html", clientes=lista_clientes)
 

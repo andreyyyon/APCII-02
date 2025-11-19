@@ -498,7 +498,7 @@ def getVehicles() -> list: # função OK
 """
     Função para atualizar o veículo
 """
-def updateVehicle(plate: str, model: str | None = None, color: str | None = None, size: str | None = None, eletric: bool | None = None) -> dict:
+def updateVehicle(plate: str, model: str | None = None, color: str | None = None, size: str | None = None, eletric: bool | None = None, vaga: str | None = None) -> dict:
     """
     Atualiza os dados de um veículo existente.
     
@@ -515,29 +515,96 @@ def updateVehicle(plate: str, model: str | None = None, color: str | None = None
     try:
         if not validatePlate(plate):
             return {'success': False, 'message': 'Veículo não encontrado!'}
-        
+
         sessao = conectar()
         plate_upper = plate.strip().upper()
         veiculo = sessao.query(VeiculoDB).filter(VeiculoDB.placa == plate_upper).first()
-        
+
         if not veiculo:
             sessao.close()
             return {'success': False, 'message': 'Veículo não encontrado!'}
-        
-        # Atualizar campos
+
+        # Atualizar campos básicos
         if model:
             veiculo.modelo = model
         if color:
             veiculo.cor = color
-        if size is not None and str(veiculo.tipo) == "C":
-            veiculo.tamanho = size
-        if eletric is not None and str(veiculo.tipo) == "M":
-            veiculo.eletrica = eletric
-        
+
+        tipo_db = str(veiculo.tipo)  # 'C' ou 'M'
+
+        # TRATAR CARRO
+        if tipo_db == "C":
+            if size is not None and size != '':
+                veiculo.tamanho = size  # 'M' ou 'G'
+            # carros não têm eletrica
+            veiculo.eletrica = None
+
+        # TRATAR MOTO
+        if tipo_db == "M":
+            # eletric pode ser True ou False
+            if eletric is not None:
+                veiculo.eletrica = bool(eletric)
+            else:
+                # se não informado, manter o valor atual (não forçar False)
+                # OBS: aqui você pode optar por não alterar caso eletric is None
+                pass
+            veiculo.tamanho = None
+
+        # TRATAR VAGA (se veio no payload)
+        if vaga is not None:
+            vaga = vaga.strip()
+            # Caso queira remover a vaga (campo vazio), libera a antiga
+            if vaga == "":
+                if veiculo.vaga_atual:
+                    vaga_antiga = sessao.query(Vaga).filter(Vaga.codigo == veiculo.vaga_atual).first()
+                    if vaga_antiga:
+                        vaga_antiga.ocupada = False
+                veiculo.vaga_atual = None
+
+            else:
+                # Buscar a vaga pedida
+                vaga_obj = sessao.query(Vaga).filter(Vaga.codigo == vaga).first()
+                if not vaga_obj:
+                    sessao.close()
+                    return {'success': False, 'message': f'Vaga {vaga} não existe!'}
+
+                # Determinar tipo de vaga esperado pelo veículo
+                esperado = None
+                if tipo_db == "C":
+                    # precisa ser 'M' ou 'G' igual ao tamanho do carro
+                    tamanho_atual = veiculo.tamanho if veiculo.tamanho else size
+                    if not tamanho_atual:
+                        sessao.close()
+                        return {'success': False, 'message': 'Tamanho do carro não definido; impossível validar vaga.'}
+                    esperado = str(tamanho_atual)  # 'M' ou 'G'
+                elif tipo_db == "M":
+                    is_eletrica = bool(veiculo.eletrica) if veiculo.eletrica is not None else bool(eletric)
+                    esperado = 'E' if is_eletrica else 'C'
+
+                # Verificar compatibilidade
+                if str(vaga_obj.tipo) != esperado:
+                    sessao.close()
+                    return {'success': False, 'message': f'Vaga {vaga} não é compatível (esperado: {esperado}).'}
+
+                # Se a vaga está ocupada por outro veículo
+                if vaga_obj.ocupada and (veiculo.vaga_atual != vaga):
+                    sessao.close()
+                    return {'success': False, 'message': f'Vaga {vaga} já está ocupada.'}
+
+                # Liberar vaga antiga (se diferente)
+                if veiculo.vaga_atual and veiculo.vaga_atual != vaga:
+                    vaga_antiga = sessao.query(Vaga).filter(Vaga.codigo == veiculo.vaga_atual).first()
+                    if vaga_antiga:
+                        vaga_antiga.ocupada = False
+
+                # Ocupar a nova vaga
+                vaga_obj.ocupada = True
+                veiculo.vaga_atual = vaga
+
         sessao.commit()
         sessao.close()
-        
         return {'success': True, 'message': 'Veículo atualizado com sucesso!'}
+
     except Exception as e:
         print(f"Erro ao atualizar veículo: {e}")
         return {'success': False, 'message': f'Erro ao atualizar: {str(e)}'}
