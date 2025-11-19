@@ -19,15 +19,19 @@
                             <option value="M" {% if tipo == "M" %}selected{% endif %}>Moto</option>
                         </select>
                     </div>
-    
-                    <label for="placa">Placa</label>
-                    <input type="text" id="placa" name="placa" value="{{ placa or '' }}" required>
-    
-                    <label for="modelo">Modelo</label>
-                    <input type="text" id="modelo" name="modelo" value="{{ modelo or '' }}" required>
-    
-                    <label for="cor">Cor</label>
-                    <input type="text" id="cor" name="cor" value="{{ cor or '' }}" required>
+                    <div class="mb-3">
+                        <label class="form-label" for="placa">Placa</label>
+                        <input class="form-control" type="text" id="placa" name="placa" value="{{ placa or '' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="modelo">Modelo</label>
+                        <input class="form-control" type="text" id="modelo" name="modelo" value="{{ modelo or '' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label" for="cor">Cor</label>
+                        <input class="form-control" type="text" id="cor" name="cor" value="{{ cor or '' }}" required>
+                    </div>
                     
                     <div id="esp_carro" class="fade {% if tipo != 'C' %}hide{% endif %}">
                         <label for="tamanho">Tamanho</label>
