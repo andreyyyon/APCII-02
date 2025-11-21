@@ -22,10 +22,21 @@
                     directions_car
                 </span>
             </a>
+
+            <button class="navbar-toggler" 
+                    type="button" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#navbar" 
+                    aria-controls="navbar" 
+                    aria-expanded="false" 
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
             <div class="collapse navbar-collapse " id="navbar">
                 <ul class="navbar-nav ms-auto" id="menu-principal">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ url_for('index') }}">Entrada/Saída</a>
+                        <a class="nav-link active" id="home" href="{{ url_for('index') }}">Entrada/Saída</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('clientes') }}">Clientes Cadastrados</a>
@@ -41,14 +52,17 @@
         </div>
     </nav>
 
-    <main class="container m-auto">
+    <main id="main" class="container">
         {% block content %}
         {% endblock %}
     </main>
 
-    <footer class=""> 
+    <footer id="footer" class="mt-auto"> 
         <div class="container-fluid p-0">
             <footer class="d-flex flex-wrap justify-content-center align-items-center py-3 border-top bg-dark text-white">
+                <span class="material-symbols-outlined position-absolute bottom-0 start-0 ms-3 mb-3 d-sm-none d-md-block">
+                    <img src="../static/assets/xxeXville.png" style="width: 105px;" alt="">
+                </span>
                 <ul class="nav justify-content-center border-bottom pb-3 mb-3 text-white">
                     <li class="nav-item">
                         <a href="https://github.com/andreyyyon" target="_blank" class="nav-link px-4 text-white">Andrey Rebelatto</a>
@@ -67,7 +81,10 @@
         document.addEventListener('DOMContentLoaded', () => {
             const caminhoAtual = window.location.pathname; 
             const linksDoMenu = document.querySelectorAll('.navbar-nav .nav-link');
-
+            if(caminhoAtual === "/"){
+                document.getElementById('#home').classList.add('active');
+            }
+            
             linksDoMenu.forEach(link => {
                 link.classList.remove('active'); 
                 

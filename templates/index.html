@@ -21,6 +21,14 @@
         </div>
         <!-- <div class="form-text"">Insira a placa para registrar a entrada ou saída.</div> -->
     </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const main = document.getElementById("main");
+            const footer = document.getElementById("footer");
+            main.classList.add("m-auto");
+            footer.classList.remove("mt-auto")
+        });
+    </script>
 </section>
 {% endblock %}
 

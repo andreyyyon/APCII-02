@@ -2,79 +2,89 @@
 
 {% block content %}
 <section class="list-section container mt-4">
-    <h2 class="mb-3">Lista de Clientes Cadastrados</h2>  
-    {% if mensagem %}
-      <div class="alert alert-{{ alert | default('info') }}">{{ mensagem }}</div>
-    {% endif %}
-    {% if clientes %}
-        <div class="table-responsive">
-            <table class="table table-striped table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Placa</th>
-                        <th>Modelo</th>
-                        <th>Cor</th>
-                        <th>Tipo</th>
-                        <th>Vaga Atual</th>
-                        <th class="text-center">Editar</th>
-                        <th class="text-center">Excluir</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for cliente in clientes %}
-                        <tr>
-                            <td class="td-placa">{{ cliente.placa }}</td>
-                            <td class="td-modelo">{{ cliente.modelo }}</td>
-                            <td class="td-cor">{{ cliente.cor }}</td>
-                            <td class="td-tipo">
-                                {% if cliente.tamanho is defined and cliente.tamanho %}
-                                    Carro
-                                {% elif cliente.eletrica is defined and cliente.eletrica is not none %}
-                                    Moto
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </td>
-                            <td class="td-vaga">{{ cliente.vaga | default(cliente.vaga_atual | default('-')) }}</td>
+  {% if mensagem %}
+  <div class="alert alert-{{ alert }} alert-dismissible fade show position-absolute bottom-0 end-0 m-3" role="alert">
+    {{ mensagem }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endif %}
+  
+  <div class="row justify-content-center">
+    <div class="col-lg-10 col-md-10">
+      <div class="card shadow-sm p-4">
+        <h2 class="text-center mb-4">Lista de Clientes Cadastrados</h2>  
+        {% if clientes %}
+              <div class="table-responsive rounded mt-3">
+                  <table class="table table-striped table-bordered text-center align-middle">
+                      <thead class="table-dark">
+                          <tr>
+                              <th>Placa</th>
+                              <th>Modelo</th>
+                              <th>Cor</th>
+                              <th>Tipo</th>
+                              <th>Vaga Atual</th>
+                              <th class="text-center">Editar</th>
+                              <th class="text-center">Excluir</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          {% for cliente in clientes %}
+                              <tr>
+                                  <td class="td-placa">{{ cliente.placa }}</td>
+                                  <td class="td-modelo">{{ cliente.modelo }}</td>
+                                  <td class="td-cor">{{ cliente.cor }}</td>
+                                  <td class="td-tipo">
+                                      {% if cliente.tamanho is defined and cliente.tamanho %}
+                                          Carro
+                                      {% elif cliente.eletrica is defined and cliente.eletrica is not none %}
+                                          Moto
+                                      {% else %}
+                                          -
+                                      {% endif %}
+                                  </td>
+                                  <td class="td-vaga">{{ cliente.vaga | default(cliente.vaga_atual | default('-')) }}</td>
 
-                            <!-- Coluna Editar (abre modal) -->
-                            <td class="text-center">
-                                <button
-                                    type="button"
-                                    class="btn btn-sm btn-outline-primary btn-edit"
-                                    title="Editar"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#editClienteModal"
-                                    data-placa="{{ cliente.placa }}"
-                                    data-modelo="{{ cliente.modelo }}"
-                                    data-cor="{{ cliente.cor }}"
-                                    data-vaga="{{ cliente.vaga | default(cliente.vaga_atual | default('')) }}"
-                                    data-tamanho="{{ cliente.tamanho | default('') }}"
-                                    data-eletrica="{{ cliente.eletrica | default('') }}"
-                                    data-tipo="{% if cliente.tamanho %}carro{% elif cliente.eletrica is not none %}moto{% else %}{% endif %}"
-                                >
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                            </td>
+                                  <!-- Coluna Editar (abre modal) -->
+                                  <td class="text-center">
+                                      <button
+                                          type="button"
+                                          class="btn btn-sm btn-outline-primary btn-edit"
+                                          title="Editar"
+                                          data-bs-toggle="modal"
+                                          data-bs-target="#editClienteModal"
+                                          data-placa="{{ cliente.placa }}"
+                                          data-modelo="{{ cliente.modelo }}"
+                                          data-cor="{{ cliente.cor }}"
+                                          data-vaga="{{ cliente.vaga | default(cliente.vaga_atual | default('')) }}"
+                                          data-tamanho="{{ cliente.tamanho | default('') }}"
+                                          data-eletrica="{{ cliente.eletrica | default('') }}"
+                                          data-tipo="{% if cliente.tamanho %}carro{% elif cliente.eletrica is not none %}moto{% else %}{% endif %}"
+                                      >
+                                          <i class="bi bi-pencil"></i>
+                                      </button>
+                                  </td>
 
-                            <!-- Coluna Excluir -->
-                            <td class="text-center">
-                                <form method="post" action="{{ url_for('clientes') }}" style="display:inline;" onsubmit="return confirm('Deseja realmente excluir este registro?');">
-                                    <input type="hidden" name="action" value="excluir">
-                                    <input type="hidden" name="placa" value="{{ cliente.placa }}">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                                  <!-- Coluna Excluir -->
+                                  <td class="text-center">
+                                      <form method="post" action="{{ url_for('clientes') }}" style="display:inline;" onsubmit="return confirm('Deseja realmente excluir este registro?');">
+                                          <input type="hidden" name="action" value="excluir">
+                                          <input type="hidden" name="placa" value="{{ cliente.placa }}">
+                                          <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
+                                              <i class="bi bi-trash"></i>
+                                          </button>
+                                      </form>
+                                  </td>
+                              </tr>
+                          {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
+          {% else %}
+              <div class="alert alert-secondary">Nenhum veículo cadastrado encontrado no sistema.</div>
+          {% endif %}
         </div>
-    {% else %}
-        <div class="alert alert-secondary">Nenhum veículo cadastrado encontrado no sistema.</div>
-    {% endif %}
+      </div>
+    </div>
 </section>
 
 <!-- Modal de Edição -->

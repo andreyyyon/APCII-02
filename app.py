@@ -123,17 +123,17 @@ def cadastro():
         if not placa:
             mensagem = "Placa é obrigatória."
             return render_template("cadastro.html", placa=placa, modelo=modelo,
-                                   cor=cor, tipo=tipo, tamanho=tamanho, tipoMoto=tipoMoto, mensagem=mensagem)
+                                   cor=cor, tipo=tipo, tamanho=tamanho, tipoMoto=tipoMoto, mensagem=mensagem, alert="warning")
 
         if not modelo:
             mensagem = "Modelo é obrigatório."
             return render_template("cadastro.html", placa=placa, modelo=modelo,
-                                   cor=cor, tipo=tipo, tamanho=tamanho, tipoMoto=tipoMoto, mensagem=mensagem)
+                                   cor=cor, tipo=tipo, tamanho=tamanho, tipoMoto=tipoMoto, mensagem=mensagem, alert="warning")
 
         if not cor:
             mensagem = "Cor é obrigatória."
             return render_template("cadastro.html", placa=placa, modelo=modelo,
-                                   cor=cor, tipo=tipo, tamanho=tamanho, tipoMoto=tipoMoto, mensagem=mensagem)
+                                   cor=cor, tipo=tipo, tamanho=tamanho, tipoMoto=tipoMoto, mensagem=mensagem, alert="warning")
         
         # Caso seja carro:
         if tipo == 'C':
@@ -152,10 +152,10 @@ def cadastro():
             return redirect(url_for('index'))
         else:
             mensagem = resultado.get('message', 'Erro ao cadastrar veiculo.')
-            return render_template("cadastro.html", placa=placa, modelo=modelo, cor=cor, tipo=tipo, tamanho=tamanho, tipoMoto=tipoMoto, mensagem=mensagem)
+            return render_template("cadastro.html", placa=placa, modelo=modelo, cor=cor, tipo=tipo, tamanho=tamanho, tipoMoto=tipoMoto, mensagem=mensagem, alert="danger")
         
             
-    return render_template("cadastro.html", placa=placa, modelo=modelo, cor=cor, tipo=tipo, tamanho=tamanho, tipoMoto=tipoMoto, mensagem=mensagem)
+    return render_template("cadastro.html", placa=placa, modelo=modelo, cor=cor, tipo=tipo, tamanho=tamanho, tipoMoto=tipoMoto, mensagem=mensagem, alert="success")
 
 # Rota de visualização de clientes, tela de veículos cadastrados
 @app.route("/clientes", methods=["GET", "POST"])
@@ -252,13 +252,8 @@ def clientes():
 # Rota de visualização de estadias, tela dos registros de estadia de determinado veículo
 @app.route("/estadias", methods=["GET", "POST"])
 def estadias():
-<<<<<<< HEAD
-    if request.method == 'POST':
-        return render_template("estadias.html")
-=======
     placa_buscada = ''
     estadias = []
->>>>>>> d8e631ba5c4447d17475c947b87cabda959a60dd
 
     if request.method == "POST":
         placa_buscada = request.form.get('placa', '').strip().upper()

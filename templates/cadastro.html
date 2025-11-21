@@ -2,14 +2,17 @@
 
 {% block content %}
 <div class="container mt-4">
+    {% if mensagem %}
+        <div class="alert alert-{{ alert }} alert-dismissible fade show position-absolute bottom-0 end-0 m-3" role="alert">
+            {{ mensagem }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
+
     <div class="row justify-content-center">
-        <div class="col-lg-8 col-md-10">
+        <div class="col-lg-10 col-md-10">
             <div class="card shadow-sm p-4">
                 <h2 class="text-center mb-3">Cadastrar Veículo</h2>
-    
-                {% if mensagem %}
-                <div class="mensagem-info">{{ mensagem }}</div>
-                {% endif %}
     
                 <form method="POST" class="">
                     <div class="mb-3">
@@ -54,7 +57,7 @@
                 </form>
             </div>
         </div>
-        </div>    
+    </div>    
 </div>
 
 <script>
