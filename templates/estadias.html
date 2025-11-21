@@ -1,40 +1,67 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="form-section">
-    <h2>Consultar Histórico de Estadias</h2>
-    <p>Digite a placa do veículo para ver todo o histórico de uso do estacionamento.</p>    
+<div class="container mt-4">
 
-    <form method="POST" class="form-card" action="{{ url_for('estadias') }}">
-        <input type="text" name="placa" placeholder="ex: ABC1234" required maxlength="7" value="{{ placa_buscada or '' }}">
-        <button type="submit">Buscar Histórico</button>
-    </form>
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
 
-    {% if placa_buscada and estadias %}
-        <h3>Histórico para a placa: {{ placa_buscada }}</h3>
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Vaga</th>
-                    <th>Entrada</th>
-                    <th>Saída</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for estadia in estadias %}
-                <tr>
-                    <td>{{ estadia.vaga }}</td>
-                    <td>{{ estadia.entrada }}</td>
-                    <td>{{ estadia.saida if estadia.saida else 'EM ABERTO' }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% elif placa_buscada and not estadias %}
-        <div class="empty-message">Nenhum histórico de estadia encontrado para a placa {{ placa_buscada }}.</div>
-    {% endif %}
+            <div class="card shadow-sm p-4">
+                <h2 class="text-center mb-3">Consultar Histórico de Estadias</h2>
+                <p class="text-center text-muted mb-4">
+                    Digite a placa do veículo para ver todo o histórico de uso do estacionamento.
+                </p>
 
-</section>
-    
+                <form method="POST" action="{{ url_for('estadias') }}" class="d-flex gap-2 justify-content-center">
+                    <input type="text"
+                           name="placa"
+                           maxlength="7"
+                           placeholder="ex: ABC1234"
+                           value="{{ placa_buscada or '' }}"
+                           required
+                           class="form-control w-50">
+
+                    <button type="submit" class="btn btn-dark">
+                        Buscar Histórico    
+                    </button>
+                </form>
+
+                {% if placa_buscada and estadias %}
+                    <h4 class="mt-4 text-center">
+                        Histórico para a placa: <strong>{{ placa_buscada }}</strong>
+                    </h4>
+
+                    <div class="table-responsive mt-3">
+                        <table class="table table-striped table-bordered text-center align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Vaga</th>
+                                    <th>Entrada</th>
+                                    <th>Saída</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for estadia in estadias %}
+                                <tr>
+                                    <td>{{ estadia.vaga }}</td>
+                                    <td>{{ estadia.entrada }}</td>
+                                    <td>{{ estadia.saida if estadia.saida else "EM ABERTO" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                {% elif placa_buscada and not estadias %}
+                    <div class="alert alert-secondary text-center mt-4">
+                        Nenhum histórico encontrado para a placa <strong>{{ placa_buscada }}</strong>.
+                    </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
 {% endblock %}
-
