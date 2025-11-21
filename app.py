@@ -252,8 +252,13 @@ def clientes():
 # Rota de visualização de estadias, tela dos registros de estadia de determinado veículo
 @app.route("/estadias", methods=["GET", "POST"])
 def estadias():
+<<<<<<< HEAD
+    if request.method == 'POST':
+        return render_template("estadias.html")
+=======
     placa_buscada = ''
     estadias = []
+>>>>>>> d8e631ba5c4447d17475c947b87cabda959a60dd
 
     if request.method == "POST":
         placa_buscada = request.form.get('placa', '').strip().upper()
